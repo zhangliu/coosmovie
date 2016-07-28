@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hello React!</title>
+    <script src="./build/react.min.js"></script>
+    <script src="./build/react-dom.min.js"></script>
+    <script src="./build/browser.min.js"></script>
+  </head>
+  <body>
+    <div id="example"></div>
+    <script type="text/babel">
+		var Father = React.createClass({
+      // 方式一
+      // componentWillMount: function() {
+      //   const sons = [];
+      //   sons.push(<Son name='son1'/>);
+      //   sons.push(<Son name='son2'/>);
+      //   this.setState({sons: sons});
+      // },
+      //
+			// render: function() {
+			// 	return <div className='father'>{this.state.sons}</div>;
+			// }
+
+      // 方式二
+      render: function() {
+        return <div className='father'>
+                <Son name='son1'/>
+                <Son name='son2'/>
+              </div>;
+      }
+		});
+
+    var Son = React.createClass({
+      render: function() {
+        return <div>{this.props.name}</div>;
+      }
+    });
+
+  	ReactDOM.render(
+  		<Father />,
+  		document.getElementById('example')
+  	);
+    </script>
+  </body>
+</html>

@@ -11,15 +11,23 @@
     <div id="example"></div>
     <script type="text/babel">
 		var User = React.createClass({
+      getInitialState: function() {
+        return {money: 50};
+      },
+
+      componentDidMount: function() {
+        setTimeout(function() {
+          this.setState({money: 25});
+        }.bind(this), 3000);
+      },
+
 			render: function() {
-        // this.props.age = 21;
-				return <div>{this.props.name};{this.props.age + 3};{this.props.children}</div>
+				return <div>{this.state.money}</div>
 			}
 		});
 
-		// console.log(typeof <Hello />);
 		ReactDOM.render(
-			<User name='zhangsan' age={20}>zhangsan is good boy</User>,
+			<User></User>,
 			document.getElementById('example')
 		);
     </script>

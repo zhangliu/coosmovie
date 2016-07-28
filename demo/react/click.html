@@ -10,16 +10,26 @@
   <body>
     <div id="example"></div>
     <script type="text/babel">
-		var User = React.createClass({
+		var Button = React.createClass({
+      getInitialState: function() {
+        return {disabled: ''};
+      },
+
+      changeState: function(e) {
+        console.log(e)
+          console.log(e.target)
+            console.log(e)
+        this.setState({disabled: 'disabled'});
+
+      },
+
 			render: function() {
-        // this.props.age = 21;
-				return <div>{this.props.name};{this.props.age + 3};{this.props.children}</div>
+				return <button onClick={this.changeState} disabled={this.state.disabled}>提交</button>
 			}
 		});
 
-		// console.log(typeof <Hello />);
 		ReactDOM.render(
-			<User name='zhangsan' age={20}>zhangsan is good boy</User>,
+			<Button />,
 			document.getElementById('example')
 		);
     </script>
