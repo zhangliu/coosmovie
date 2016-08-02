@@ -1,68 +1,49 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Redux basic example</title>
-    <script src="https://npmcdn.com/redux@latest/dist/redux.min.js"></script>
-  </head>
-  <body>
-    <div>
-      <p>
-        Clicked: <span id="value">0</span> times
-        <button id="increment">+</button>
-        <button id="decrement">-</button>
-        <button id="incrementIfOdd">Increment if odd</button>
-        <button id="incrementAsync">Increment async</button>
-      </p>
-    </div>
-    <script>
-      function counter(state, action) {
-        if (typeof state === 'undefined') {
-          return 0
-        }
-
-        switch (action.type) {
-          case 'INCREMENT':
-            return state + 1
-          case 'DECREMENT':
-            return state - 1
-          default:
-            return state
-        }
-      }
-
-      var store = Redux.createStore(counter)
-      var valueEl = document.getElementById('value')
-
-      function render() {
-        valueEl.innerHTML = store.getState().toString()
-      }
-
-      render()
-      store.subscribe(render)
-
-      document.getElementById('increment')
-        .addEventListener('click', function () {
-          store.dispatch({ type: 'INCREMENT' })
-        })
-
-      document.getElementById('decrement')
-        .addEventListener('click', function () {
-          store.dispatch({ type: 'DECREMENT' })
-        })
-
-      document.getElementById('incrementIfOdd')
-        .addEventListener('click', function () {
-          if (store.getState() % 2 !== 0) {
-            store.dispatch({ type: 'INCREMENT' })
-          }
-        })
-
-      document.getElementById('incrementAsync')
-        .addEventListener('click', function () {
-          setTimeout(function () {
-            store.dispatch({ type: 'INCREMENT' })
-          }, 1000)
-        })
-    </script>
-  </body>
+	<head>
+		<script src="https://npmcdn.com/redux@latest/dist/redux.min.js"></script>
+	</head>
+	<body>
+		<div>
+			<span id='value'>0</span>
+			<button id='plus'>+</button>
+			<button id='delayPlus'>delay +</button>
+			<button id='minus'>-</button>
+		</div>
+		<script>
+			function counter(state = {value: 0}, action) {
+				switch(action.type) {
+					case 'PLUS': 
+						return {value: state.value + 1};
+					case 'MINUS': 
+						return {value: state.value -1};
+					default: return state;
+				}
+			}
+			
+			var store = Redux.createStore(counter);
+			var tree = store.getState();
+			console.log(tree);
+			document.getElementById('value').innerHTML = tree.value;
+			store.subscribe(function() {
+				tree = store.getState();
+				document.getElementById('value').innerHTML = tree.value;
+			});
+			
+			document.getElementById('plus').addEventListener('click', function() {
+				store.dispatch({type: 'PLUS'});
+			});
+			
+			document.getElementById('minus').addEventListener('click', function() {
+				store.dispatch({type: 'MINUS'});
+			});
+			
+			document.getElementById('delayPlus').addEventListener('click', function() {
+				setTimeout(function() {
+					store.dispatch({type: 'PLUS'});
+				}, 2000);
+			});
+			
+		</script>
+	</body>
 </html>
