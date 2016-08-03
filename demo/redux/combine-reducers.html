@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="https://npmcdn.com/redux@latest/dist/redux.min.js"></script>
+	</head>
+	<body>
+		<div>
+			<span id='value'>0</span>
+			<button id='plus'>+</button>
+			<button id='delayPlus'>delay +</button>
+			<button id='minus'>-</button>
+		</div>
+		<br/>
+		<div>
+			<input id='name' />
+			<button id='submit'>submit</button>
+			<span id='nameValue'></span>
+		</div>
+		<script>
+			/*function counter(state = {value: 0, nameValue: ''}, action) {
+				switch(action.type) {
+					case 'PLUS': 
+						return {value: state.value + 1, nameValue: state.nameValue};
+					case 'MINUS': 
+						return {value: state.value -1, nameValue: state.nameValue};
+					default: return state;
+				}
+			}*/
+			
+			function counter(state = 0, action) {
+				switch(action.type) {
+					case 'PLUS': 
+						return state + 1;
+					case 'MINUS': 
+						return state - 1;
+					default: return state;
+				}
+			}
+			
+			function name(state = 'zhangliu', action) {
+				switch(action.type) {
+					case 'RESET': 
+						return action.name;
+					default: return state;
+				}
+			}
+			
+			/*var reducers = Redux.combineReducers({
+				value: counter,
+				nameValue: name
+			});*/
+			
+			var reducers = Redux.combineReducers({
+				counter,
+				name
+			});
+			
+			var store = Redux.createStore(reducers);
+			
+			tree = store.getState();
+			// document.getElementById('value').innerHTML = tree.value;
+			// document.getElementById('nameValue').innerHTML = tree.nameValue;
+			document.getElementById('value').innerHTML = tree.counter;
+			document.getElementById('nameValue').innerHTML = tree.name;
+			store.subscribe(function() {
+				tree = store.getState();
+				// document.getElementById('value').innerHTML = tree.value;
+				// document.getElementById('nameValue').innerHTML = tree.nameValue;
+				document.getElementById('value').innerHTML = tree.counter;
+				document.getElementById('nameValue').innerHTML = tree.name;
+			});
+			
+			setTimeout(function() {
+				store.dispatch({type: 'RESET', name: 'lisi'});
+				store.dispatch({type: 'PLUS'});
+			}, 3000)
+		</script>
+	</body>
+</html>
