@@ -64,8 +64,6 @@
 
 	var _redux = __webpack_require__(176);
 
-	var _redux2 = _interopRequireDefault(_redux);
-
 	var _reactRedux = __webpack_require__(189);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -74,17 +72,36 @@
 	  displayName: 'User',
 
 	  render: function render() {
+	    var _this = this;
+
+	    var nameInput = null;
+	    var ageInput = null;
 	    return _react2.default.createElement(
 	      'div',
 	      null,
-	      this.props.name,
+	      _react2.default.createElement('input', { ref: function ref(node) {
+	          return nameInput = node;
+	        }, onChange: function onChange() {
+	          return _this.props.onChangeName(nameInput.value);
+	        }, value: this.props.name }),
 	      ';',
-	      this.props.age
+	      _react2.default.createElement('input', { ref: function ref(node) {
+	          return ageInput = node;
+	        }, onChange: function onChange() {
+	          return _this.props.onChangeAge(ageInput.value);
+	        }, value: this.props.age }),
+	      ';'
 	    );
 	  }
 	});
 
 	// 创建store
+	/*
+	{
+	  name: 'zhangsan',
+	  age: 20
+	}
+	*/
 	var name = function name() {
 	  var state = arguments.length <= 0 || arguments[0] === undefined ? 'zhangsan' : arguments[0];
 	  var action = arguments[1];
@@ -109,8 +126,8 @@
 	  }
 	};
 
-	var reducers = _redux2.default.combineReducers({ name: name, age: age });
-	var store = _redux2.default.createStore(reducers);
+	var reducers = (0, _redux.combineReducers)({ name: name, age: age });
+	var store = (0, _redux.createStore)(reducers);
 
 	// 建立组件和store之间的映射
 	var mapStateToProps = function mapStateToProps(state) {
@@ -120,7 +137,21 @@
 	  };
 	};
 
-	User = (0, _reactRedux.connect)(mapStateToProps)(User);
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    onChangeName: function onChangeName(name) {
+	      dispatch({ type: 'SET_NAME', name: name });
+	      console.log(store.getState());
+	    },
+
+	    onChangeAge: function onChangeAge(age) {
+	      dispatch({ type: 'SET_AGE', age: age });
+	      console.log(store.getState());
+	    }
+	  };
+	};
+
+	User = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(User);
 
 	var App = function App() {
 	  return _react2.default.createElement(

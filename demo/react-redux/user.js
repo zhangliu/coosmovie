@@ -5,11 +5,24 @@ import {Provider, connect} from 'react-redux'
 
 let User = React.createClass({
 	render: function() {
-		return <div>{this.props.name};{this.props.age}</div>
+    let nameInput = null;
+    let ageInput = null;
+		return (
+      <div>
+        <input ref={node => nameInput=node} onChange={() => this.props.onChangeName(nameInput.value)} value={this.props.name} />;
+        <input ref={node => ageInput=node} onChange={() => this.props.onChangeAge(ageInput.value)} value={this.props.age} />;
+      </div>
+    )
 	}
 });
 
 // 创建store
+/*
+{
+  name: 'zhangsan',
+  age: 20
+}
+*/
 const name = (state='zhangsan', action) => {
   switch(action.type) {
     case 'SET_NAME':
@@ -37,7 +50,21 @@ const mapStateToProps = (state) => {
   }
 }
 
-User = connect(mapStateToProps)(User)
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onChangeName: (name) => {
+      dispatch({type: 'SET_NAME', name: name})
+      console.log(store.getState())
+    },
+
+    onChangeAge: (age) => {
+      dispatch({type: 'SET_AGE', age: age})
+      console.log(store.getState())
+    }
+  }
+}
+
+User = connect(mapStateToProps, mapDispatchToProps)(User)
 
 const App = () => <Provider store={store}><User/></Provider>
 

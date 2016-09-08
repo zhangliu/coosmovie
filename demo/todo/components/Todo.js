@@ -1,4 +1,5 @@
-export default (text, onClick, completed) => {
+import React from 'react'
+export default ({text, onClick, completed}) => {
   return (
     <li
       onClick={onClick}
