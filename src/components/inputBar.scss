@@ -1,0 +1,23 @@
+.input-bar-container {
+  margin-top: 16px;
+  .input-bar-col-input {
+    padding: 8px;
+    background: white;
+    border: 1px solid #eee;
+    border-right: 0px;
+  }
+  .input-bar-col-button {
+    padding: 8px;
+    background: white;
+    border: 1px solid #eee;
+    border-left: 0px;
+  }
+  .input {
+    resize: none;
+    font-weight: bold;
+  }
+  .button {
+    width: 100%;
+    height: 46px;
+  }
+}
