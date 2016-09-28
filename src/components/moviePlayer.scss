@@ -9,6 +9,22 @@
       height: 100%;
       float: left;
     }
+    .video-right {
+      position: relative;
+      float: left;
+      .mask {
+        position: absolute;
+        width: 100%;
+        height: 100px;
+        background: #000;
+        opacity: 0.8;
+        bottom: 0px;
+
+        .playBar {
+          
+        }
+      }
+    }
 
     .video-left {
       height: 100%;

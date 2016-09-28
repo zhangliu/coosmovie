@@ -12,12 +12,20 @@ export default class className extends React.Component {
     return (
       <Row className='input-bar-container'>
         <Col className='input-bar-col-input' span={21}>
-          <Input className='input' type="textarea" autosize={{ minRows: 2, maxRows: 2 }}/>
+          <Input
+            className='input'
+            type="textarea"
+            onChange={this.onChange.bind(this)}
+            autosize={{ minRows: 2, maxRows: 2 }}/>
         </Col>
         <Col className='input-bar-col-button' span={3}>
           <Button className='button' type="primary">Primary</Button>
         </Col>
       </Row>
     )
+  }
+
+  onChange(e) {
+    console.log(e.target.value)
   }
 }

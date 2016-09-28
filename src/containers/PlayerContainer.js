@@ -1,7 +1,6 @@
 import React from 'react'
 
-import MoviePlayer from '../components/MoviePlayer'
-import InputBar from '../components/InputBar'
+import Player from '../components/player'
 
 export default class MovieContainer extends React.Component {
   constructor(props) {
@@ -10,9 +9,7 @@ export default class MovieContainer extends React.Component {
 
   render() {
     return (
-      <div>
-        <MoviePlayer/>
-      </div>
+      <Player/>
     )
   }
 }
