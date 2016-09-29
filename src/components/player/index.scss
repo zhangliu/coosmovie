@@ -52,4 +52,26 @@
     opacity: 0.8;
     z-index: 100;
   }
+
+  /**inputBar**/
+  .input-bar {
+    display: flex;
+    margin-top: 8px;
+    .input-bar-left {
+      padding: 8px;
+      background: white;
+      border: 1px solid #eee;
+      border-right: 0px;
+      width: 100%;
+    }
+    .input-bar-right {
+      padding: 8px;
+      background: white;
+      border: 1px solid #eee;
+      border-left: 0px;
+      .button {
+        height: 46px;
+      }
+    }
+  }
 }
