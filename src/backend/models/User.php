@@ -1,104 +1,50 @@
 <?php
-
 namespace app\models;
 
-class User extends \yii\base\Object implements \yii\web\IdentityInterface
-{
-    public $id;
-    public $username;
-    public $password;
-    public $authKey;
-    public $accessToken;
+use Yii;
+use yii\db\ActiveRecord;
+use yii\web\IdentityInterface;
 
-    private static $users = [
-        '100' => [
-            'id' => '100',
-            'username' => 'admin',
-            'password' => 'admin',
-            'authKey' => 'test100key',
-            'accessToken' => '100-token',
-        ],
-        '101' => [
-            'id' => '101',
-            'username' => 'demo',
-            'password' => 'demo',
-            'authKey' => 'test101key',
-            'accessToken' => '101-token',
-        ],
-    ];
+class User extends ActiveRecord implements IdentityInterface{
 
+  public function safeAttributes() {
+    return ['phone', 'password'];
+  }
 
-    /**
-     * @inheritdoc
-     */
-    public static function findIdentity($id)
-    {
-        return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
+  public function login() {
+    $password = md5(Yii::$app->params['passwordKey'].$this->password);
+    $user = self::findOne(['phone' => $this->phone, 'password' => $password]);
+    return Yii::$app->user->login($user, 0);
+  }
+
+  public function beforeSave($insert) {
+    if (parent::beforeSave($insert)) {
+      $this->password = md5(Yii::$app->params['passwordKey'].$this->password);
+      if ($this->isNewRecord) {
+        $this->auth_key = Yii::$app->security->generateRandomString();
+      }
+      return true;
     }
+    return false;
+  }
 
-    /**
-     * @inheritdoc
-     */
-    public static function findIdentityByAccessToken($token, $type = null)
-    {
-        foreach (self::$users as $user) {
-            if ($user['accessToken'] === $token) {
-                return new static($user);
-            }
-        }
+  public static function findIdentity($id) {
+    return static::findOne($id);
+  }
 
-        return null;
-    }
+  public static function findIdentityByAccessToken($token, $type = null) {
+    return static::findOne(['access_token' => $token]);
+  }
 
-    /**
-     * Finds user by username
-     *
-     * @param string $username
-     * @return static|null
-     */
-    public static function findByUsername($username)
-    {
-        foreach (self::$users as $user) {
-            if (strcasecmp($user['username'], $username) === 0) {
-                return new static($user);
-            }
-        }
+  public function getId() {
+    return $this->id;
+  }
 
-        return null;
-    }
+  public function getAuthKey() {
+    // return $this->authKey;
+  }
 
-    /**
-     * @inheritdoc
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getAuthKey()
-    {
-        return $this->authKey;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function validateAuthKey($authKey)
-    {
-        return $this->authKey === $authKey;
-    }
-
-    /**
-     * Validates password
-     *
-     * @param string $password password to validate
-     * @return boolean if password provided is valid for current user
-     */
-    public function validatePassword($password)
-    {
-        return $this->password === $password;
-    }
+  public function validateAuthKey($authKey) {
+    // return $this->authKey === $authKey;
+  }
 }
