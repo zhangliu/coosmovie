@@ -1,7 +1,15 @@
 <?php
-
+use yii\filters\Cors;
 return [
     'adminEmail' => 'admin@example.com',
     'passwordKey' => 'imooc123',
-    'corsOrigin' => ['http://localhost:8080'],
+    'corsFilter' => [
+      'class' => Cors::className(),
+      'cors' => [
+        'Origin' => ['*'],
+        'Access-Control-Request-Method' => ['GET', 'POST', 'OPTION'],
+        'Access-Control-Request-Headers' => ['*'],
+        'Access-Control-Allow-Credentials' => true,
+      ],
+    ],
 ];

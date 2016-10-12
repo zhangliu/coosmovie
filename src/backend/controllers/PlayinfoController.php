@@ -11,15 +11,7 @@ class PlayinfoController extends Controller{
   public $enableCsrfValidation=false;
   public function behaviors(){
     return [
-      'corsFilter' => [
-        'class' => Cors::className(),
-        'cors' => [
-          'Origin' => Yii::$app->params['corsOrigin'],
-          'Access-Control-Request-Method' => ['GET', 'POST', 'OPTION', 'PUT'],
-          'Access-Control-Request-Headers' => ['*'],
-          'Access-Control-Allow-Credentials' => true,
-        ],
-      ]
+      'corsFilter' => Yii::$app->params['corsFilter'],
     ];
   }
 

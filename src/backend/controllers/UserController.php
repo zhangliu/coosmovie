@@ -11,15 +11,7 @@ class UserController extends Controller{
   public $enableCsrfValidation=false;
   public function behaviors(){
     return [
-      'corsFilter' => [
-        'class' => Cors::className(),
-        'cors' => [
-          'Origin' => ['http://localhost:8080'],
-          'Access-Control-Request-Method' => ['GET', 'POST', 'OPTION'],
-          'Access-Control-Request-Headers' => ['*'],
-          'Access-Control-Allow-Credentials' => true,
-        ],
-      ]
+      // 'corsFilter' => Yii::$app->params['corsFilter'],
     ];
   }
 
