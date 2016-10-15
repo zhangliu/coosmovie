@@ -11,7 +11,7 @@ class UserController extends Controller{
   public $enableCsrfValidation=false;
   public function behaviors(){
     return [
-      // 'corsFilter' => Yii::$app->params['corsFilter'],
+      'corsFilter' => Yii::$app->params['corsFilter'],
     ];
   }
 

@@ -7,7 +7,7 @@ return [
       'class' => Cors::className(),
       'cors' => [
         'Origin' => ['*'],
-        'Access-Control-Request-Method' => ['GET', 'POST', 'OPTION'],
+        'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'OPTION'],
         'Access-Control-Request-Headers' => ['*'],
         'Access-Control-Allow-Credentials' => true,
       ],

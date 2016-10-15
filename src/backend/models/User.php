@@ -11,6 +11,12 @@ class User extends ActiveRecord implements IdentityInterface{
     return ['phone', 'password'];
   }
 
+  public function rules() {
+    return [
+      [['phone', 'password'], 'required'],
+    ];
+  }
+
   public function login() {
     $password = md5(Yii::$app->params['passwordKey'].$this->password);
     $user = self::findOne(['phone' => $this->phone, 'password' => $password]);
