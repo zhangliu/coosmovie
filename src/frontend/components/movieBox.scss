@@ -1,0 +1,42 @@
+$width: 215px;
+$height: 110px;
+$space: 16px;
+
+.movie-box {
+  float: left;
+  position: relative;
+  margin: $space 0px 0px $space;
+  span {
+    position: absolute;
+    padding: 8px;
+    color: white;
+    font-size: 14px;
+    line-height: 18px;
+    left: 0px;
+    bottom: 0px;
+  }
+}
+
+.movie-box-big {
+  @extend .movie-box;
+  img {
+    width: $width * 2 + $space;
+    height: $height * 2 + $space;
+  }
+}
+
+.movie-box-small {
+  @extend .movie-box;
+  img {
+    width: $width;
+    height: $height;
+  }
+}
+
+.movie-box-width-big {
+  @extend .movie-box;
+  img {
+    width: $width * 2 + $space;
+    height: $height;
+  }
+}

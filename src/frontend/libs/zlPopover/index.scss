@@ -1,0 +1,10 @@
+.zlPopover {
+  display: inline-block;
+  span {
+    position: absolute;
+    transition: none;
+    top: 0px;
+    left: 0px;
+    display: inline-block;
+  }
+}

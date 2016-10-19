@@ -33,7 +33,7 @@ class DialogueController extends Controller{
           $segment->startTime = $this->getTime($startMatchs);
           $segment->endTime = $this->getTime($endMatchs);
           $segment->translate = $array[2];
-          $segment->sentence = $array[3];
+          $segment->sentence = $array[3];//strtolower(preg_replace('/|[^\sa-zA-Z0-9]/', '', $array[3]));
           if ($segment->startTime <= 0 || $segment->endTime <= 0) {
             continue;
           }

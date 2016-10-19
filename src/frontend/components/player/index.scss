@@ -1,0 +1,80 @@
+.player {
+  margin-top: 24px;
+  height: 524px;
+  .col1 {
+    background: #333;
+    .player-left {
+      float: left;
+      position: relative;
+      video {
+        height: 100%;
+      }
+    }
+    .player-right {
+      float: left;
+      padding: 8px;
+    }
+  }
+
+  /**bar**/
+  .bar {
+    position: absolute;
+    bottom: 100px;
+    width: 100%;
+    z-index: 101;
+    display: flex;
+    align-items: center;
+    height: 16px;
+    .bar-left {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      height: 100%;
+      width: 100%;
+      .ant-progress-show-info .ant-progress-outer {
+        padding-right: 0px;
+        margin-right: 0px;
+      }
+    }
+    .bar-right {
+      color: #ddd;
+      width: 111px;
+      padding: 0px 8px;
+    }
+  }
+
+  /**mask**/
+  .mask{
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    background: #000;
+    opacity: 0.9;
+    z-index: 100;
+    text-align: center;
+    color: wheat;
+  }
+
+  /**inputBar**/
+  .input-bar {
+    display: flex;
+    position: relative;
+    margin-top: 8px;
+    .input-bar-left {
+      padding: 8px;
+      background: white;
+      border: 1px solid #eee;
+      border-right: 0px;
+      width: 100%;
+    }
+    .input-bar-right {
+      padding: 8px;
+      background: white;
+      border: 1px solid #eee;
+      border-left: 0px;
+      .button {
+        height: 46px;
+      }
+    }
+  }
+}
