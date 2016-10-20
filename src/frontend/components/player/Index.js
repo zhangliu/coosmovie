@@ -4,7 +4,7 @@ import Bar from './Bar'
 import Mask from './Mask'
 import Detail from './Detail'
 import InputBar from './InputBar'
-import stringHelper from '../../libs/stringHelper'
+import sentenceLogic from '../logics/sentence'
 
 import './index.scss'
 
@@ -84,7 +84,6 @@ export default class className extends React.Component {
   }
 
   onPlay() {
-    // this.state.maskHeight = 0
     this.player.volume = 1
     this.setState(this.state)
 
@@ -130,14 +129,9 @@ export default class className extends React.Component {
 
     // 显示写正确的台词
     const reg = /\s|[^a-zA-Z0-9]/g
-    const sentence = segment.sentence.toLowerCase().replace(reg, '')
-    const content = obj.content.toLowerCase().replace(reg, '')
-    const intersectionStr = stringHelper.getStartIntersection(sentence, content)
-    const showStr = stringHelper.getCompleteStr(segment.sentence, intersectionStr, reg)
+    const showStr = sentenceLogic.getCompleteStr(segment.sentence, obj.content)
     console.log('showStr==>', showStr)
-    const strIndex = segment.sentence.indexOf(showStr)
-    console.log(segment.sentence.substr(0, strIndex))
-    if (segment.sentence.substr(0, strIndex).replace(reg, '') === '') {
+    if (segment.sentence.indexOf(showStr) === 0) {
       this.state.mask.sentence = this.state.mask.sentence.length > showStr.length
       ? this.state.mask.sentence
       : showStr
@@ -145,7 +139,7 @@ export default class className extends React.Component {
     }
 
     // 如果台词都写对了，就进入下一句
-    if (content.replace(reg, '').indexOf(sentence.replace(reg, '')) !== -1) {
+    if (segment.sentence.replace(reg, '') === showStr.replace(reg, '')) {
       this.state.segmentInfo.index++
       this.state.mask.sentence = ''
       this.setState(this.state)
@@ -187,9 +181,8 @@ export default class className extends React.Component {
         break
       case 'showSentence':
         if (segment) {
-          const showSentences = this.state.mask.sentence.split(/\s+/).filter(e => e.length > 0)
-          const sentences = segment.sentence.split(/\s+/).filter(e => e.length > 0)
-          this.state.mask.sentence = sentences.slice(0, showSentences.length + 1).join(' ').toLowerCase()
+          const sentence = this.state.mask.sentence
+          this.state.mask.sentence = sentenceLogic.getMoreStr(segment.sentence, sentence)
           this.setState(this.state)
         }
         break
