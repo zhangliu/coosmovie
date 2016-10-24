@@ -5,16 +5,16 @@ use yii\console\Controller;
 use app\models\Movie;
 
 class MovieController extends Controller{
-  public function actionAdd($dir, $sliceTime = 300000){ // 300000表示五分钟，单位毫秒
+  public function actionAdd($inputDir, $offset = 5000, $sliceTime = 300000){ // 300000表示五分钟，单位毫秒
 
     // 文件检测
-    if (!is_dir($dir)) {
+    if (!is_dir($inputDir)) {
       echo '文件夹路径不正确'.PHP_EOL;
       return;
     }
-    $moviePath = dirname($dir).'/'.basename($dir).'/movie.mov';
-    $srtPath = dirname($dir).'/'.basename($dir).'/movie.srt';
-    $infoPath = dirname($dir).'/'.basename($dir).'/info.json';
+    $moviePath = dirname($inputDir).'/'.basename($inputDir).'/movie.mov';
+    $srtPath = dirname($inputDir).'/'.basename($inputDir).'/movie.srt';
+    $infoPath = dirname($inputDir).'/'.basename($inputDir).'/info.json';
     if (!is_file($moviePath) || !is_file($srtPath) || !is_file($infoPath)) {
       echo '视频文件或者字幕文件或视频详情文件不存在当前目录当中！'.PHP_EOL;
       return;
@@ -37,7 +37,7 @@ class MovieController extends Controller{
     echo '解析出字幕'.count($segments).'个'.PHP_EOL;
 
     echo '开始解析切片...'.PHP_EOL;
-    $slices = $this->getSlices($segments, basename($dir), $sliceTime);
+    $slices = $this->getSlices($segments, basename($inputDir), $sliceTime);
     if (count($slices) <= 0) {
       echo '没有解析出任何切片!'.PHP_EOL;
       return;
@@ -45,7 +45,7 @@ class MovieController extends Controller{
     echo '解析出切片'.count($slices).'个'.PHP_EOL;
 
     echo '开始切割视频...'.PHP_EOL;
-    $this->sliceMovie($moviePath);
+    $this->sliceMovie($moviePath, $slices, $offset);
     echo '切割视频成功！'.PHP_EOL;
 
     echo '开始保存数据到数据库...'.PHP_EOL;
@@ -61,11 +61,11 @@ class MovieController extends Controller{
       if (preg_match('/^\s*$/', $line)) {
         try{
           $segment = $this->getSegment($array);
+          $array = array();
           if ($segment === null) {
             continue;
           }
           $segments[] = $segment;
-          $array = array();
         } catch(Exception $e) {
           $array = array();
           echo '无法处理line:'.print_r($array, true)."\r\n";
@@ -78,7 +78,7 @@ class MovieController extends Controller{
   }
 
   private function getSegment($array) {
-    if (!is_array($array) || count($array) < 4) {
+    if (!is_array($array) || count($array) != 4) {
       return null;
     }
     preg_match('/(.*:.*:.*,.*)\s*-->\s*(.*:.*:.*,.*)$/', $array[1], $matchs);
@@ -104,6 +104,10 @@ class MovieController extends Controller{
   }
 
   private function getSlices(&$segments, $movieName, $sliceTime) {
+    $outPath = 'views/movies/'.$movieName;
+    if (!is_dir($outPath)) {
+      mkdir($outPath);
+    }
     $slices = array();
     $startTime = 0;
     $endTime = 0;
@@ -116,7 +120,7 @@ class MovieController extends Controller{
         $slice = new \stdClass();
         $slice->segments = $tmpSegments;
         $slice->orderId = ++$orderId;
-        $slice->src = 'views/movies/'.$movieName.'_'.$slice->orderId;
+        $slice->src = $outPath.'/'.$slice->orderId.'.mov';
         $slices[] = $slice;
         $startTime = $segment->startTime;
         $tmpSegments = array();
@@ -125,15 +129,52 @@ class MovieController extends Controller{
     return $slices;
   }
 
-  private function sliceMovie($moviePath) {
-    return true;
+  private function sliceMovie($moviePath, $slices, $offset) {
+    foreach($slices as $slice) {
+      $startTime = $slice->segments[0]->startTime;
+      $startTime = ($startTime - $offset) > 0 ? ($startTime - $offset) : 0;
+      $length = count($slice->segments);
+      $endTime = $slice->segments[$length - 1]->endTime;
+      $endTime = $endTime + $offset;
+
+      $startTimeStr = $this->getTimeStr($startTime);
+      $endTimeStr = $this->getTimeStr($endTime);
+      $cmd = 'ffmpeg -y -ss '.$startTimeStr.' -t '.$endTimeStr.' -i '
+        .$moviePath.' -vcodec copy -acodec copy '.$slice->src;
+      // echo $cmd.PHP_EOL;
+      exec($cmd);
+    }
   }
 
-  private function saveToDb($infoPath, $slices) {
-    // $segmentsStr = "'".str_replace("'", "''", json_encode($segments))."'";
-    // $db = \YII::$app->db;
-    // file_put_contents('tmp.txt', 'update emovie_movie set segments='.$segmentsStr.' where id = 1');
-    // $command = $db->createCommand('update emovie_movie set segments='.$segmentsStr.' where id = 1');
-    // $command->execute();
+  private function getTimeStr($time) {
+    $hours = intval($time / (3600 * 1000));
+    $time = $time - $hours * 3600 * 1000;
+    $minutes = intval($time / (60 * 1000));
+    $time = $time - $minutes * 60 * 1000;
+    $seconds = intval($time / 1000);
+
+    return substr('00'.$hours, -2).':'.substr('00'.$minutes, -2).':'.substr('00'.$seconds, -2);
+  }
+
+  private function saveToDb($movieInfo, $slices) {
+    $db = \YII::$app->db;
+    $command = $db->createCommand("delete from emovie_movie where name = '".$movieInfo->name."'");
+    $command->execute();
+    $sql = 'insert into emovie_movie(name, english_name, introduce) '
+      ."values('".$movieInfo->name."', '".$movieInfo->englishName."', '".$movieInfo->introduce."')";
+    $command = $db->createCommand($sql);
+    $command->execute();
+    $command = $db->createCommand('select id from emovie_movie where name =\''.$movieInfo->name.'\'');
+    $result = $command->queryOne();
+    $movieId = intval($result['id']);
+    foreach($slices as $slice) {
+      $command = $db->createCommand('delete from emovie_movie_slice where src = \''.$slice->src.'\'');
+      $command->execute();
+      $segmentsStr = "'".str_replace("'", "''", json_encode($slice->segments))."'";
+      $sql = 'insert into emovie_movie_slice(movie_id, src, segments, orderId) '
+        .'values('.$movieId.',\''.$slice->src.'\','.$segmentsStr.','.$slice->orderId.')';
+      $command = $db->createCommand($sql);
+      $command->execute();
+    }
   }
 }
