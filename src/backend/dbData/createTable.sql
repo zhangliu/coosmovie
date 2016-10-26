@@ -9,7 +9,7 @@ CREATE TABLE emovie_movie
 );
 
 -- Table: emovie_play_info
-CREATE TABLE emovie_user_play_info
+CREATE TABLE emovie_play_info
 (
   id serial NOT NULL,
   movie_slice_id integer,
@@ -36,6 +36,8 @@ CREATE TABLE emovie_movie_slice
   id serial NOT NULL,
   movie_id integer,
   src character varying(100),
+  local_src character varying(100),
   segments json DEFAULT '[]'::json,
-  orderId integer
+  orderId integer,
+  CONSTRAINT emovie_movie_slice_pkey PRIMARY KEY (id)
 );

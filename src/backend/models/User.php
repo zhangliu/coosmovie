@@ -20,6 +20,9 @@ class User extends ActiveRecord implements IdentityInterface{
   public function login() {
     $password = md5(Yii::$app->params['passwordKey'].$this->password);
     $user = self::findOne(['phone' => $this->phone, 'password' => $password]);
+    if (!$user) {
+      return false;
+    }
     return Yii::$app->user->login($user, 0);
   }
 

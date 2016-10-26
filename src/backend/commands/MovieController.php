@@ -4,6 +4,9 @@ namespace app\commands;
 use yii\console\Controller;
 use app\models\Movie;
 
+use Qiniu\Auth;
+use Qiniu\Storage\UploadManager;
+
 class MovieController extends Controller{
   public function actionAdd($inputDir, $offset = 5000, $sliceTime = 300000){ // 300000表示五分钟，单位毫秒
 
@@ -45,7 +48,7 @@ class MovieController extends Controller{
     echo '解析出切片'.count($slices).'个'.PHP_EOL;
 
     echo '开始切割视频...'.PHP_EOL;
-    $this->sliceMovie($moviePath, $slices, $offset);
+    $slices = $this->sliceMovie($moviePath, $slices, $offset);
     echo '切割视频成功！'.PHP_EOL;
 
     echo '开始保存数据到数据库...'.PHP_EOL;
@@ -120,7 +123,7 @@ class MovieController extends Controller{
         $slice = new \stdClass();
         $slice->segments = $tmpSegments;
         $slice->orderId = ++$orderId;
-        $slice->src = $outPath.'/'.$slice->orderId.'.mov';
+        $slice->localSrc = $outPath.'/slice_'.$slice->orderId.'.mov';
         $slices[] = $slice;
         $startTime = $segment->startTime;
         $tmpSegments = array();
@@ -129,21 +132,30 @@ class MovieController extends Controller{
     return $slices;
   }
 
-  private function sliceMovie($moviePath, $slices, $offset) {
+  private function sliceMovie($moviePath, &$slices, $offset) {
     foreach($slices as $slice) {
       $startTime = $slice->segments[0]->startTime;
       $startTime = ($startTime - $offset) > 0 ? ($startTime - $offset) : 0;
       $length = count($slice->segments);
       $endTime = $slice->segments[$length - 1]->endTime;
-      $endTime = $endTime + $offset;
+      $duration = $endTime + $offset - $startTime;
 
       $startTimeStr = $this->getTimeStr($startTime);
-      $endTimeStr = $this->getTimeStr($endTime);
-      $cmd = 'ffmpeg -y -ss '.$startTimeStr.' -t '.$endTimeStr.' -i '
-        .$moviePath.' -vcodec copy -acodec copy '.$slice->src;
-      // echo $cmd.PHP_EOL;
+      $durationStr = $this->getTimeStr($duration);
+      // $cmd = 'ffmpeg -y -ss '.$startTimeStr.' -t '.$durationStr.' -i '
+      //   .$moviePath.' -vcodec copy -acodec copy '.$slice->localSrc;
+      $cmd = 'ffmpeg -y -ss '.$startTimeStr.' -t '.$durationStr.' -i '
+        .$moviePath.' -f mov copy '.$slice->localSrc;
+      echo $cmd.PHP_EOL;
       exec($cmd);
+
+      // 修正字幕时间
+      foreach ($slice->segments as $segment) {
+        $segment->startTime -= $startTime;
+        $segment->endTime -= $startTime;
+      }
     }
+    return $slices;
   }
 
   private function getTimeStr($time) {
@@ -152,11 +164,13 @@ class MovieController extends Controller{
     $minutes = intval($time / (60 * 1000));
     $time = $time - $minutes * 60 * 1000;
     $seconds = intval($time / 1000);
-
-    return substr('00'.$hours, -2).':'.substr('00'.$minutes, -2).':'.substr('00'.$seconds, -2);
+    $micSeconds = $time % 1000;
+    return substr('00'.$hours, -2).':'.substr('00'.$minutes, -2).':'
+      .substr('00'.$seconds, -2).'.'.substr('00'.$micSeconds, -3);
   }
 
   private function saveToDb($movieInfo, $slices) {
+    return;
     $db = \YII::$app->db;
     $command = $db->createCommand("delete from emovie_movie where name = '".$movieInfo->name."'");
     $command->execute();
@@ -168,13 +182,57 @@ class MovieController extends Controller{
     $result = $command->queryOne();
     $movieId = intval($result['id']);
     foreach($slices as $slice) {
-      $command = $db->createCommand('delete from emovie_movie_slice where src = \''.$slice->src.'\'');
+      $command = $db->createCommand('delete from emovie_movie_slice where local_src = \''.$slice->localSrc.'\'');
       $command->execute();
       $segmentsStr = "'".str_replace("'", "''", json_encode($slice->segments))."'";
-      $sql = 'insert into emovie_movie_slice(movie_id, src, segments, orderId) '
-        .'values('.$movieId.',\''.$slice->src.'\','.$segmentsStr.','.$slice->orderId.')';
+      $sql = 'insert into emovie_movie_slice(movie_id, local_src, segments, orderId) '
+        .'values('.$movieId.',\''.$slice->localSrc.'\','.$segmentsStr.','.$slice->orderId.')';
       $command = $db->createCommand($sql);
       $command->execute();
+    }
+  }
+
+  public function actionUploadQiniu() {
+    require_once 'vendor/qiniu/autoload.php';
+
+    // 构建上传对象
+    $accessKey = base64_decode(\YII::$app->params['accessKey']);
+    $secretKey = base64_decode(\YII::$app->params['secretKey']);
+
+    $auth = new Auth($accessKey, $secretKey);
+    $bucket = 'emovie';
+    $token = $auth->uploadToken($bucket);
+    $uploadMgr = new UploadManager();
+
+    // 去除要上传的视频
+    $db = \YII::$app->db;
+    $result = $db->createCommand('select id, local_src from emovie_movie_slice where src is null')
+      ->queryAll();
+    echo '获取需要上传的文件'.count($result).'个'.PHP_EOL;
+    $errFiles = array();
+    foreach ($result as $slice) {
+      if (!is_file($slice['local_src'])) {
+        continue;
+      }
+      echo '开始上传文件"'.$slice['local_src'].'"'.PHP_EOL;
+      list($ret, $err) = $uploadMgr->putFile($token, null, $slice['local_src']);
+      if ($err === null) {
+        echo '文件"'.$slice['local_src'].'"上传成功！'.PHP_EOL;
+        $db->createCommand('update emovie_movie_slice set src=\''.$ret['key'].'\' where id = '.$slice['id'])
+          ->execute();
+        $successFiles[] = $slice['local_src'];
+      } else {
+        echo '文件"'.$slice['local_src'].'"上传失败！！！！！！！！'.PHP_EOL;
+        $errFiles[] = ['local_src' => $slice['local_src'], 'msg' => $err];
+      }
+    }
+    echo '恭喜！上传完成！'.PHP_EOL;
+    echo '上传失败的视频有'.count($errFiles).'个！'.PHP_EOL;
+    echo '失败信息：'.PHP_EOL;
+    foreach ($errFiles as $errFile) {
+      echo '失败文件"'.$errFile['local_src'].'"'.PHP_EOL;
+      var_dump($errFile['msg']);
+      echo '--------------------------------------------'.PHP_EOL;
     }
   }
 }

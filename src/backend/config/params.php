@@ -12,4 +12,8 @@ return [
         'Access-Control-Allow-Credentials' => true,
       ],
     ],
+
+    // qiniu
+    'accessKey' => 'U0dQR3lad2wyb1F6Q0lGNGt4MllJTUtrRzJzWXBCbVFnZ2duLW9IUQ==',
+    'secretKey' => 'TTdkb1MxUUdVVEdDVkloTVQyWndVQ2l2bE92QzhhVFRIRzJoTlMwTQ==',
 ];

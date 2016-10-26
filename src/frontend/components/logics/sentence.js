@@ -54,7 +54,7 @@ const getCompleteStr = (str1, str2) => {
 
 const getMoreStr = (sentence, content) => {
   if (sentence.length <= content.length) {
-    return
+    return ''
   }
   let index = content.length
   let hasChar = false

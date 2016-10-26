@@ -3,23 +3,19 @@ namespace app\models;
 
 use yii\db\ActiveRecord;
 
-class PlayInfo extends ActiveRecord
-{
-  // public static function tableName(){
-  //   return 'customer';
-  // }
+class PlayInfo extends ActiveRecord {
   public function safeAttributes() {
-    return ['user_id', 'movie_id', 'segment_index'];
+    return ['user_id', 'movie_slice_id', 'segment_index'];
   }
 
   public function rules() {
     return [
-      [['movie_id', 'user_id', 'segment_index'], 'integer', 'min' => 1],
+      [['movie_slice_id', 'user_id', 'segment_index'], 'integer', 'min' => 1],
     ];
   }
 
   public static function upsert($data) {
-    $movie = self::findOne(['user_id' => $data['user_id'], 'movie_id' => $data['movie_id']]);
+    $movie = self::findOne(['user_id' => $data['user_id'], 'movie_slice_id' => $data['movie_slice_id']]);
     if ($movie) {
       $movie->segment_index = $data['segment_index'];
       return $movie->save();
@@ -30,6 +26,6 @@ class PlayInfo extends ActiveRecord
   }
 
   public static function getOne($data) {
-    return self::findOne(['user_id' => $data['user_id'], 'movie_id' => $data['movie_id']]);
+    return self::findOne(['user_id' => $data['user_id'], 'movie_slice_id' => $data['movie_slice_id']]);
   }
 }

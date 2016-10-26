@@ -3,21 +3,21 @@ import {message} from 'antd'
 import config from '../config'
 import rest from '../libs/restHelper'
 
-import Player from '../components/player'
+import Player from '../components/player/Index'
 
 export default class className extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      movie: null,
+      movieSlice: null,
       playInfo: null,
     }
   }
 
   async componentWillMount() {
-    const movie = await rest.get(`${config.apiUrl}/movie/get?id=${this.props.params.id}`)
-    const playInfo = await rest.get(`${config.apiUrl}/playinfo/get?movieId=${this.props.params.id}`)
-    this.state.movie = movie
+    const movieSlice = await rest.get(`${config.apiUrl}/movie-slice/get?id=${this.props.params.id}`)
+    const playInfo = await rest.get(`${config.apiUrl}/play-info/get?movieSliceId=${this.props.params.id}`)
+    this.state.movieSlice = movieSlice
     this.state.playInfo = playInfo
     this.setState(this.state)
   }
@@ -25,18 +25,18 @@ export default class className extends React.Component {
   render() {
     return (
       <Player
-        movie={this.state.movie}
+        movieSlice={this.state.movieSlice}
         playInfo={this.state.playInfo}
         segmentIndexChange={this.segmentIndexChange.bind(this)}/>
     )
   }
 
   async segmentIndexChange(index) {
-    if (!this.state.movie) {
+    if (!this.state.movieSlice) {
       return
     }
-    const data = {movieId: this.state.movie.id, segmentIndex: index}
-    const result = await rest.put(`${config.apiUrl}/playinfo/upsert`, data)
+    const data = {movieSliceId: this.state.movieSlice.id, segmentIndex: index}
+    const result = await rest.put(`${config.apiUrl}/play-info/upsert`, data)
     if (result !== true) {
       message.error('更新最新的segment index失败！')
     }

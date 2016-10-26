@@ -10,7 +10,7 @@ export default () => (
   <Router history={browserHistory}>
     <Route path="/" component={IndexContainer}>
       <IndexRoute component={MovieListContainer}/>
-      <Route path='movie/:id' component={PlayerContainer}/>
+      <Route path='movie-slice/:id' component={PlayerContainer}/>
       <Route path='login' component={LoginContainer}/>
     </Route>
   </Router>

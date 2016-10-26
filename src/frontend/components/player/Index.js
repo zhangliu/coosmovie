@@ -5,6 +5,7 @@ import Mask from './Mask'
 import Detail from './Detail'
 import InputBar from './InputBar'
 import sentenceLogic from '../logics/sentence'
+import config from '../../config'
 
 import './index.scss'
 
@@ -31,10 +32,12 @@ export default class className extends React.Component {
   }
 
   componentWillReceiveProps(props) {
-    const segments = JSON.parse(props.movie.segments);
+    const segments = JSON.parse(props.movieSlice.segments);
     const index = props.playInfo ? props.playInfo.segmentIndex - 1 : 0
     this.state.segmentInfo = {segments: segments, index: index}
-    this.state.src = props.movie.src
+    this.state.src = config.localUrl
+      ? config.localUrl + props.movieSlice.local_src
+      : config.qiniuUrl + props.movieSlice.src
     this.setState(this.state, () => {
       const info = this.state.segmentInfo
       this.player.currentTime = info.segments[info.index].startTime / 1000

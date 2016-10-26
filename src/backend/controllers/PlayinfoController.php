@@ -7,7 +7,7 @@ use yii\filters\Cors;
 use yii\web\Controller;
 use app\models\PlayInfo;
 
-class PlayinfoController extends Controller{
+class PlayInfoController extends Controller{
   public $enableCsrfValidation=false;
   public function behaviors(){
     return [
@@ -21,7 +21,7 @@ class PlayinfoController extends Controller{
     }
     $data = [
       'user_id' => Yii::$app->user->id,
-      'movie_id' => Yii::$app->request->get('movieId'),
+      'movie_slice_id' => Yii::$app->request->get('movieSliceId'),
     ];
     $playInfo = PlayInfo::getOne($data);
     if (!$playInfo) {
@@ -39,7 +39,7 @@ class PlayinfoController extends Controller{
     $postData = Yii::$app->request->post();
     $data = [
       'user_id' => Yii::$app->user->id,
-      'movie_id' => $postData['movieId'],
+      'movie_slice_id' => $postData['movieSliceId'],
       'segment_index' => $postData['segmentIndex']
     ];
     return PlayInfo::upsert($data);
