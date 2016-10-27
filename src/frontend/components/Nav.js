@@ -28,25 +28,10 @@ export default class Nav extends React.Component {
             <Menu.Item key="home">
               首页
             </Menu.Item>
-            <Menu.Item key="smile">
-              喜剧
-            </Menu.Item>
-            <Menu.Item key="meh">
-              恐怖
-            </Menu.Item>
-            <Menu.Item key="love">
-              爱情
-            </Menu.Item>
-            <Menu.Item key="science">
-              科幻
-            </Menu.Item>
-            <Menu.Item key="other">
-              其他
-            </Menu.Item>
           </Menu>
         </Col>
-        <Col span={8} offset={4}>
-          <div className='nav-user'>{this.renderUserInfo(this.props.user)}</div>
+        <Col span={12}>
+          <span className='nav-user'>{this.renderUserInfo(this.props.user)}</span>
         </Col>
       </Row>
     )

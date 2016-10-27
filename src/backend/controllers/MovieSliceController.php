@@ -19,4 +19,12 @@ class MovieSliceController extends Controller{
     $movieSlice = MovieSlice::findOne(Yii::$app->request->get()['id']);
     return $movieSlice->attributes;
   }
+
+  public function actionGetslice() {
+    $slice = MovieSlice::find()
+      ->where(['movie_id' => \YII::$app->request->get('movieId')])
+      ->orderBy('order_id')
+      ->one();
+    return $slice->attributes;
+  }
 }

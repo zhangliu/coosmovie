@@ -4,6 +4,8 @@ CREATE TABLE emovie_movie
   id serial NOT NULL,
   name character varying(50),
   english_name character varying(50),
+  img_src character varying(200),
+  type character varying(20),
   introduce character varying(250),
   CONSTRAINT emovie_movie_pkey PRIMARY KEY (id)
 );
@@ -38,6 +40,6 @@ CREATE TABLE emovie_movie_slice
   src character varying(100),
   local_src character varying(100),
   segments json DEFAULT '[]'::json,
-  orderId integer,
+  order_id integer,
   CONSTRAINT emovie_movie_slice_pkey PRIMARY KEY (id)
 );
