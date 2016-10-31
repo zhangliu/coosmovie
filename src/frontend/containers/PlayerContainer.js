@@ -11,14 +11,18 @@ export default class className extends React.Component {
     this.state = {
       movieSlice: null,
       playInfo: null,
+      movieSlices: [],
     }
   }
 
   async componentWillMount() {
     const movieSlice = await rest.get(`${config.apiUrl}/movie-slice/get?id=${this.props.params.id}`)
+    const movieSlices = await rest.get(`${config.apiUrl}/movie-slice/getallslices?movieId=${movieSlice.movie_id}`)
+    console.log(movieSlices)
     const playInfo = await rest.get(`${config.apiUrl}/play-info/get?movieSliceId=${this.props.params.id}`)
     this.state.movieSlice = movieSlice
     this.state.playInfo = playInfo
+    this.state.movieSlices = movieSlices
     this.setState(this.state)
   }
 
@@ -26,6 +30,7 @@ export default class className extends React.Component {
     return (
       <Player
         movieSlice={this.state.movieSlice}
+        movieSlices={this.state.movieSlices}
         playInfo={this.state.playInfo}
         segmentIndexChange={this.segmentIndexChange.bind(this)}/>
     )

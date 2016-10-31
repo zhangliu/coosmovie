@@ -77,4 +77,12 @@
       }
     }
   }
+
+  /**detail**/
+  .detail {
+    .sliceList {
+      display: flex;
+      flex-wrap: wrap;
+    }
+  }
 }

@@ -20,11 +20,22 @@ class MovieSliceController extends Controller{
     return $movieSlice->attributes;
   }
 
-  public function actionGetslice() {
+  public function actionGetfirstslice() {
     $slice = MovieSlice::find()
       ->where(['movie_id' => \YII::$app->request->get('movieId')])
       ->orderBy('order_id')
       ->one();
     return $slice->attributes;
+  }
+
+  public function actionGetallslices() {
+    $movieSlices = MovieSlice::find()
+      ->where(['movie_id' => \Yii::$app->request->get('movieId')])
+      ->all();
+    $result = array();
+    foreach($movieSlices as $slice) {
+      $result[] = $slice->attributes;
+    }
+    return $result;
   }
 }
