@@ -1,6 +1,6 @@
 import React from 'react'
 import {Input, Button} from 'antd'
-import ZlPopover from '../../libs/zlPopover'
+import ZlPopover from '../../libs/zlPopover/Index'
 import positionHelper from '../../libs/positionHelper'
 import translateHelper from '../../libs/translateHelper'
 
