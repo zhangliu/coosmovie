@@ -4,3 +4,4 @@ src/node_modules
 src/frontend/test.mov
 src/frontend/node_modules
 movies/
+bundle.js
