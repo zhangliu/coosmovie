@@ -50,31 +50,27 @@ export default class className extends React.Component {
         <Row>
           <Col span={22} offset={1} className='col1'>
             <Row>
-              <Col span={18}>
-                <div className='player-left'>
-                  <video
-                    id='player'
-                    ref={node => this.player = node}
-                    onPlay={this.onPlay.bind(this)}
-                    onPause={this.onPause.bind(this)}
-                    onClick={this.onClick.bind(this)}
-                    onCanPlay={this.onCanPlay.bind(this)}
-                    src={this.state.src}
-                    autoPlay={true}/>
-                  <Bar
-                    totalSeconds={this.state.totalSeconds}
-                    currentSeconds={this.state.currentSeconds}
-                    onUpdateProgress={this.onUpdateProgress.bind(this)}/>
-                  <Mask
-                    sentence={this.state.mask.sentence}
-                    height={this.state.mask.height}
-                    fontSize={this.state.mask.fontSize}/>
-                </div>
+              <Col span={19}>
+                <video
+                  id='player'
+                  ref={node => this.player = node}
+                  onPlay={this.onPlay.bind(this)}
+                  onPause={this.onPause.bind(this)}
+                  onClick={this.onClick.bind(this)}
+                  onCanPlay={this.onCanPlay.bind(this)}
+                  src={this.state.src}
+                  autoPlay={true}/>
+                <Bar
+                  totalSeconds={this.state.totalSeconds}
+                  currentSeconds={this.state.currentSeconds}
+                  onUpdateProgress={this.onUpdateProgress.bind(this)}/>
+                <Mask
+                  sentence={this.state.mask.sentence}
+                  height={this.state.mask.height}
+                  fontSize={this.state.mask.fontSize}/>
               </Col>
-              <Col span={4}>
-                <div className='player-right'>
-                  <Detail movieSlices={this.props.movieSlices}/>
-                </div>
+              <Col span={5}>
+                <Detail currentSlice={this.props.movieSlice} movieSlices={this.props.movieSlices}/>
               </Col>
             </Row>
           </Col>

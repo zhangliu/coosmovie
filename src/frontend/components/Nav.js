@@ -18,7 +18,7 @@ export default class Nav extends React.Component {
     return (
       <Row className='nav-container'>
         <Col span={2} offset={1}>
-          <span className='nav-logo'>Emoive !</span>
+          <a href='/' className='nav-logo'>Emoive !</a>
         </Col>
         <Col span={8}>
           <Menu
@@ -26,7 +26,7 @@ export default class Nav extends React.Component {
             theme='dark'
             defaultSelectedKeys={[this.state.menu]}>
             <Menu.Item key="home">
-              首页
+              <a href='/'>首页</a>
             </Menu.Item>
           </Menu>
         </Col>
@@ -41,7 +41,7 @@ export default class Nav extends React.Component {
     if (user) {
       return <span>欢迎：{user.phone}</span>
     }
-    return <a href='/login'>登录</a>
+    // return <a href='/login'>登录</a>
   }
 
   renderAddMovie() {

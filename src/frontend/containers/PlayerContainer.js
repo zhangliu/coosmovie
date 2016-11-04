@@ -9,8 +9,8 @@ export default class className extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      movieSlice: null,
-      playInfo: null,
+      movieSlice: {},
+      playInfo: {},
       movieSlices: [],
     }
   }
@@ -18,7 +18,6 @@ export default class className extends React.Component {
   async componentWillMount() {
     const movieSlice = await rest.get(`${config.apiUrl}/movie-slice/get?id=${this.props.params.id}`)
     const movieSlices = await rest.get(`${config.apiUrl}/movie-slice/getallslices?movieId=${movieSlice.movie_id}`)
-    console.log(movieSlices)
     const playInfo = await rest.get(`${config.apiUrl}/play-info/get?movieSliceId=${this.props.params.id}`)
     this.state.movieSlice = movieSlice
     this.state.playInfo = playInfo

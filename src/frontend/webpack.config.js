@@ -1,7 +1,8 @@
+const webpack = require('webpack')
 module.exports = {
   entry: ['babel-polyfill', './index.js'],
   output: {
-    path: './js',
+    path: 'js',
     filename: 'bundle.js',
   },
   watch: true,
@@ -17,10 +18,17 @@ module.exports = {
     ],
     resolve: {
       extensions: ['', '.js', '.jsx', '.css', '.scss'],
-        modulesDirectories: [
-          'node_modules'
-        ],        
+      // modulesDirectories: [
+      //   'node_modules',
+      // ],
     },
   },
-  // devtool: '#source-map',
+  devtool: '#source-map',
+  plugins: [
+    // new webpack.optimize.UglifyJsPlugin({
+    //   compress: {
+    //     warnings: false,
+    //   },
+    // }),
+  ],
 };

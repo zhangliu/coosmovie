@@ -26,16 +26,10 @@ export default class IndexContainer extends React.Component {
           this.state.movies.map((movie, index) => {
             return <MovieBox
               key={index}
-              onClickMovie={this.onClickMovie.bind(this)}
               data={movie}/>
           })
         }
       </MovieList>
     )
-  }
-
-  async onClickMovie(id) {
-    const slice = await rest.get(`${config.apiUrl}/movie-slice/getslice?movieId=${id}`)
-    window.location.href = `/movie-slice/${slice.id}`
   }
 }

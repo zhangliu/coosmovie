@@ -20,13 +20,13 @@ class MovieSliceController extends Controller{
     return $movieSlice->attributes;
   }
 
-  public function actionGetfirstslice() {
-    $slice = MovieSlice::find()
-      ->where(['movie_id' => \YII::$app->request->get('movieId')])
-      ->orderBy('order_id')
-      ->one();
-    return $slice->attributes;
-  }
+  // public function actionGetfirstslice() {
+  //   $slice = MovieSlice::find()
+  //     ->where(['movie_id' => \YII::$app->request->get('movieId')])
+  //     ->orderBy('order_id')
+  //     ->one();
+  //   return $slice->attributes;
+  // }
 
   public function actionGetallslices() {
     $movieSlices = MovieSlice::find()

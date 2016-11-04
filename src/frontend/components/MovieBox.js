@@ -12,17 +12,15 @@ export default class MovieBox extends React.Component {
 
   render() {
     return (
-      <div className={`movie-box-${this.state.movie.type}`} onClick={this.onClick.bind(this)}>
+      <a
+        className={`movie-box-${this.state.movie.type}`}
+        href={`movie-slice/${this.state.movie.sliceIds[0]}`}>
         <img src={this.state.movie.img_src}
           onMouseOver={this.onMouseOver.bind(this)}
           onMouseOut={this.onMouseOut.bind(this)}/>
         <span>{this.state.movie.name}</span>
-      </div>
+      </a>
     )
-  }
-
-  onClick() {
-    this.props.onClickMovie(this.state.movie.id);
   }
 
   onMouseOver(e) {
