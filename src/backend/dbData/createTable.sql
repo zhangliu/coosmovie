@@ -43,3 +43,16 @@ CREATE TABLE emovie_movie_slice
   order_id integer,
   CONSTRAINT emovie_movie_slice_pkey PRIMARY KEY (id)
 );
+
+-- Table: emovie_play_log
+CREATE TABLE emovie_play_log
+(
+  id serial NOT NULL,
+  user_id integer,
+  movie_slice_id integer,
+  segment_index integer,
+  content json DEFAULT '{}'::json,
+  type character varying(20),
+  start_time timestamp with time zone NOT NULL,
+  CONSTRAINT emovie_play_log_pkey PRIMARY KEY (id)
+)

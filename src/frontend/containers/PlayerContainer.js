@@ -12,6 +12,7 @@ export default class className extends React.Component {
       movieSlice: {},
       playInfo: {},
       movieSlices: [],
+      scoreInfo: 0,
     }
   }
 
@@ -31,6 +32,8 @@ export default class className extends React.Component {
         movieSlice={this.state.movieSlice}
         movieSlices={this.state.movieSlices}
         playInfo={this.state.playInfo}
+        addPlayLog={this.addPlayLog.bind(this)}
+        getScoreInfo={this.getScoreInfo.bind(this)}
         segmentIndexChange={this.segmentIndexChange.bind(this)}/>
     )
   }
@@ -44,5 +47,13 @@ export default class className extends React.Component {
     if (result !== true) {
       message.error('更新最新的segment index失败！')
     }
+  }
+
+  async addPlayLog(log) {
+    await rest.post(`${config.apiUrl}/play-log/add`, log)
+  }
+
+  async getScoreInfo() {
+    return await rest.get(`${config.apiUrl}/play-log/get-score-info?movieSliceId=${this.state.movieSlice.id}`)
   }
 }

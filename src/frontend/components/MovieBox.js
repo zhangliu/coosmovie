@@ -6,7 +6,7 @@ export default class MovieBox extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      movie: props.data
+      movie: props.data,
     }
   }
 

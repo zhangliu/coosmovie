@@ -28,6 +28,7 @@ export default class className extends React.Component {
       },
       totalSeconds: 0,
       currentSeconds: 0,
+      scoreInfo: {},
     }
   }
 
@@ -70,7 +71,10 @@ export default class className extends React.Component {
                   fontSize={this.state.mask.fontSize}/>
               </Col>
               <Col span={5}>
-                <Detail currentSlice={this.props.movieSlice} movieSlices={this.props.movieSlices}/>
+                <Detail
+                  currentSlice={this.props.movieSlice}
+                  movieSlices={this.props.movieSlices}
+                  scoreInfo={this.state.scoreInfo}/>
               </Col>
             </Row>
           </Col>
@@ -88,10 +92,8 @@ export default class className extends React.Component {
     this.setState(this.state)
   }
 
-  onPlay() {
+  async onPlay() {
     this.player.volume = 1
-    this.setState(this.state)
-
     clearInterval(this.timer)
     if (this.player) {
       this.timer = setInterval(() => {
@@ -108,9 +110,25 @@ export default class className extends React.Component {
         this.setState(this.state)
       }, 100)
     }
+    this.props.addPlayLog({
+      movie_slice_id: this.props.movieSlice.id,
+      type: 'start_play',
+      segment_index: this.state.segmentInfo.index,
+    })
+    const scoreInfo = await this.props.getScoreInfo()
+    this.state.scoreInfo = scoreInfo
+    this.state.scoreInfo.segmentIndex = this.state.segmentInfo.index
+    this.state.scoreInfo.segmentLength = this.state.segmentInfo.segments.length
+    this.state.scoreInfo.currentTime = this.player.playDuration
+    this.setState(this.state)
   }
 
   onPause() {
+    this.props.addPlayLog({
+      movie_slice_id: this.props.movieSlice.id,
+      type: 'stop_play',
+      segment_index: this.state.segmentInfo.index,
+    })
     clearInterval(this.timer)
   }
 
@@ -189,6 +207,12 @@ export default class className extends React.Component {
           const sentence = this.state.mask.sentence
           this.state.mask.sentence = sentenceLogic.getMoreStr(segment.sentence, sentence)
           this.setState(this.state)
+          this.props.addPlayLog({
+            movie_slice_id: this.props.movieSlice.id,
+            type: 'show_sentence',
+            segment_index: this.state.segmentInfo.index,
+            content: this.state.mask.sentence,
+          })
         }
         break
       default:

@@ -11,7 +11,7 @@
   /**bar**/
   .bar {
     position: absolute;
-    bottom: 100px;
+    top: 4px;
     width: 100%;
     z-index: 101;
     display: flex;
@@ -26,6 +26,9 @@
       .ant-progress-show-info .ant-progress-outer {
         padding-right: 0px;
         margin-right: 0px;
+      }
+      .ant-progress {
+        display: none;
       }
     }
     .bar-right {
@@ -103,6 +106,15 @@
       .scoreTitle {
         text-align: center;
       }
+      .scoreDes {
+        text-align: left;
+      }
+      .scoreInfo {
+        text-align: center;
+        font-size: 40px;
+        color: #ccc;
+      }
+      .ant-rate-star {margin: 8px}
     }
   }
 }
