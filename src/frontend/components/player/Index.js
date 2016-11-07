@@ -43,6 +43,7 @@ export default class className extends React.Component {
       const info = this.state.segmentInfo
       this.player.currentTime = info.segments[info.index].startTime / 1000
     })
+    this.updateScore()
   }
 
   render() {
@@ -92,7 +93,7 @@ export default class className extends React.Component {
     this.setState(this.state)
   }
 
-  async onPlay() {
+  onPlay() {
     this.player.volume = 1
     clearInterval(this.timer)
     if (this.player) {
@@ -115,6 +116,9 @@ export default class className extends React.Component {
       type: 'start_play',
       segment_index: this.state.segmentInfo.index,
     })
+  }
+
+  async updateScore() {
     const scoreInfo = await this.props.getScoreInfo()
     this.state.scoreInfo = scoreInfo
     this.state.scoreInfo.segmentIndex = this.state.segmentInfo.index
@@ -168,6 +172,7 @@ export default class className extends React.Component {
       this.setState(this.state)
       this.props.segmentIndexChange(this.state.segmentInfo.index)
       this.player.play()
+      this.updateScore()
       return
     }
 
@@ -214,6 +219,7 @@ export default class className extends React.Component {
             content: this.state.mask.sentence,
           })
         }
+        this.updateScore()
         break
       default:
         break
