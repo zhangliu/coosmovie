@@ -16,7 +16,7 @@ $config = [
         ],
         'response' => [
           'class' => 'yii\web\Response',
-          'on beforeSend' => function ($event) {
+          'on beforeSends' => function ($event) {
             $response = $event->sender;
             $response->data = json_encode([
               'success' => $response->isSuccessful,
@@ -33,7 +33,7 @@ $config = [
             'enableAutoLogin' => true,
         ],
         'errorHandler' => [
-            'class' => 'app\libs\MyErrorHandler',
+//            'class' => 'app\libs\MyErrorHandler',
         ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
