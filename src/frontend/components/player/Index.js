@@ -123,17 +123,18 @@ export default class className extends React.Component {
     this.state.scoreInfo = scoreInfo
     this.state.scoreInfo.segmentIndex = this.state.segmentInfo.index
     this.state.scoreInfo.segmentLength = this.state.segmentInfo.segments.length
-    this.state.scoreInfo.currentTime = this.player.playDuration
+    this.state.scoreInfo.currentTime = this.player.currentTime
     this.setState(this.state)
   }
 
   onPause() {
+    clearInterval(this.timer)
     this.props.addPlayLog({
       movie_slice_id: this.props.movieSlice.id,
       type: 'stop_play',
       segment_index: this.state.segmentInfo.index,
     })
-    clearInterval(this.timer)
+    this.updateScore()
   }
 
   onUpdateProgress(currentSeconds) {

@@ -43,7 +43,7 @@ export default class className extends React.Component {
     }
     const num1 = (scoreInfo.segmentIndex / scoreInfo.segmentLength) * 100
     const num2 = scoreInfo.currentTime > 0
-      ? ((scoreInfo.playDuration / scoreInfo.currentTime) - 1) * 10
+      ? ((scoreInfo.playDuration / scoreInfo.currentTime) - 1) * 0.1
       : 0
     const num3 = scoreInfo.helpLogLength * 0.1
     const score = num1 - num2 - num3
