@@ -32,15 +32,15 @@ class PlayLogController extends Controller{
 
   public function actionGetScoreInfo() {
     $uid = Yii::$app->user->id;
+    $obj = new \stdClass();
     if (!$uid) {
-      return 0;
+      return $obj;
     }
     $movieSliceId = Yii::$app->request->get('movieSliceId');
     $startPlayLog = PlayLog::find()
       ->where(['type' => 'start_play', 'segment_index' => 0, 'user_id' => $uid, 'movie_slice_id' => $movieSliceId])
       ->orderBy('start_time desc')
       ->one();
-    $obj = new \stdClass();
     if (!$startPlayLog) {
       return $obj;
     }
