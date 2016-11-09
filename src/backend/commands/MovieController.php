@@ -235,4 +235,22 @@ class MovieController extends Controller{
       echo '--------------------------------------------'.PHP_EOL;
     }
   }
+
+  public function actionMoveData() {
+    $localDb = \YII::$app->db;
+    $result = $localDb->createCommand('select * from emovie_movie_slice')
+      ->queryAll();
+
+    $remoteDb = new \yii\db\Connection([
+        'dsn' => 'pgsql:host=115.28.143.126;port=5432;dbname=coosmovie',
+        'username' => 'postgres',
+        'password' => 'root',
+    ]);
+    $remoteDb->open();
+    foreach($result as $row) {
+      $remoteDb->createCommand('insert INTO coosmovie_movie_slice(id, movie_id, src, local_src, segments, order_id)'
+        .'values('.$row['id'].', '.$row['movie_id'].', \''.$row['src'].'\', \''.$row['local_src'].'\', \''
+        .str_replace("'", "''", $row['segments']).'\', '.$row['order_id'].')')->execute();
+    }
+  }
 }
