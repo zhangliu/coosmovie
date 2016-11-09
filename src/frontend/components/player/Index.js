@@ -34,7 +34,7 @@ export default class className extends React.Component {
 
   componentWillReceiveProps(props) {
     const segments = JSON.parse(props.movieSlice.segments);
-    const index = props.playInfo ? props.playInfo.segmentIndex - 1 : 0
+    const index = props.playInfo && props.playInfo.segmentIndex ? props.playInfo.segmentIndex : 0
     this.state.segmentInfo = {segments: segments, index: index}
     this.state.src = config.localUrl
       ? config.localUrl + props.movieSlice.local_src
