@@ -37,13 +37,13 @@ module.exports = {
     //   ],
     // },
   },
-  //devtool: '#source-map',
+  // devtool: '#source-map',
   plugins: [
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false,
-      },
-    }),
+    // new webpack.optimize.UglifyJsPlugin({
+    //   compress: {
+    //     warnings: false,
+    //   },
+    // }),
     new webpack.optimize.CommonsChunkPlugin('vendor', '[chunkhash].vendor.bundle.js'),
     new HtmlWebpackPlugin({
       filename: 'index.html',
