@@ -1,5 +1,5 @@
 {
-  "name": "zl-emovie",
+  "name": "zl-coosmovie",
   "version": "1.0.0",
   "description": "zl emovie project",
   "main": "index.js",
@@ -23,11 +23,16 @@
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
     "react-router": "^2.8.1",
-    "antd": "^2.2.0",
     "css-loader": "^0.25.0",
     "node-sass": "^3.10.1",
     "sass-loader": "^4.0.2",
     "style-loader": "^0.13.1",
     "webpack": "^1.13.3"
+  },
+  "devDependencies": {
+    "antd": "^2.4.1",
+    "babel-plugin-import": "^1.0.1",
+    "less": "^2.7.1",
+    "less-loader": "^2.2.3"
   }
 }
