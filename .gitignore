@@ -6,3 +6,4 @@ src/frontend/node_modules
 movies/
 bundle.js
 config.js
+src/backend/config/db.php
