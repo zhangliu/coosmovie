@@ -7,3 +7,4 @@ movies/
 bundle.js
 config.js
 src/backend/config/db.php
+src/backend/composer.phar
