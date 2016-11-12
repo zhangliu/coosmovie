@@ -1,18 +1,25 @@
 const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+
+// multiple extract instances
+const extractCSS = new ExtractTextPlugin('css/[chunkhash].[name].css');
+
 module.exports = {
   entry: {
     app: './index.js',
     vendor: ['babel-polyfill', 'react', 'react-dom', 'react-router'],
   },
   output: {
-    path: 'js',
-    filename: 'bundle.js',
+    path: 'dist',
+    publicPath: '/',
+    filename: 'js/[chunkhash].bundle.js',
   },
   watch: true,
   module: {
     loaders: [
       {
-        test: /\.js$/,
+        test: /\.js$/i,
         loader: 'babel',
         query: {
           presets: ['react', 'latest'],
@@ -20,8 +27,8 @@ module.exports = {
         },
         exclude: /node_modules/,
       },
-      {test: /\.scss$/, loaders: ['style', 'css', 'sass'], exclude: /node_modules/},
-      {test: /\.less$/, loader: 'style!css!less'},
+      {test: /\.scss$/i, loader: extractCSS.extract(['css', 'sass']), exclude: /node_modules/},
+      {test: /\.less$/i, loader: extractCSS.extract(['css', 'less'])},
     ],
     // resolve: {
     //   extensions: ['', '.js', '.jsx', '.css', '.scss', '.less'],
@@ -37,6 +44,13 @@ module.exports = {
         warnings: false,
       },
     }),
-    new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.bundle.js'),
+    new webpack.optimize.CommonsChunkPlugin('vendor', '[chunkhash].vendor.bundle.js'),
+    new HtmlWebpackPlugin({
+      filename: 'index.html',
+      template: 'template.html',
+      inject: true,
+      chunksSortMode: 'dependency',
+    }),
+    extractCSS,
   ],
 };
