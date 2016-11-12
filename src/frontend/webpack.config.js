@@ -52,5 +52,10 @@ module.exports = {
       chunksSortMode: 'dependency',
     }),
     extractCSS,
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('production'),
+      },
+    }),
   ],
 };
