@@ -44,7 +44,7 @@ module.exports = {
     //     warnings: false,
     //   },
     // }),
-    new webpack.optimize.CommonsChunkPlugin('vendor', '[chunkhash].vendor.bundle.js'),
+    new webpack.optimize.CommonsChunkPlugin('vendor', 'js/[chunkhash].vendor.bundle.js'),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'template.html',
