@@ -8,3 +8,4 @@ bundle.js
 config.js
 src/backend/config/db.php
 src/backend/composer.phar
+src/frontend/dump.rdb

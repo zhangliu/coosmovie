@@ -41,7 +41,7 @@ export default class Nav extends React.Component {
     if (user) {
       return <span>欢迎：{user.phone}</span>
     }
-    // return <a href='/login'>登录</a>
+    return <a href='/login'>登录</a>
   }
 
   renderAddMovie() {
