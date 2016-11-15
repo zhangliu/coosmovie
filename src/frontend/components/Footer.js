@@ -10,6 +10,7 @@ export default class className extends React.Component {
   render() {
     return (
       <div className='footer'>
+        <div className='placeholder'></div>
         <div className='footerContent'>
           <span>developed by zhangliu, email: </span>
           <a href='mailto:zhangliuge@yeah.net'>zhangliuge@yeah.net</a>
