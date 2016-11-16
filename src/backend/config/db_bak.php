@@ -2,9 +2,9 @@
 
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'pgsql:host=localhost;port=5432;dbname=coosmovie',
-    'username' => 'postgres',
-    'password' => 'root',
+    'dsn' => 'pgsql:host=localhost;port=5432;dbname=xxxx',
+    'username' => 'xxx',
+    'password' => 'xxx',
     'charset' => 'utf8',
-    'tablePrefix' => 'coosmovie_',
+    'tablePrefix' => 'xxx',
 ];
