@@ -2,7 +2,7 @@
 use yii\filters\Cors;
 return [
     'adminEmail' => 'admin@example.com',
-    'passwordKey' => 'imooc123',
+    'passwordKey' => 'xxx',
     'corsFilter' => [
       'class' => Cors::className(),
       'cors' => [
@@ -14,6 +14,6 @@ return [
     ],
 
     // qiniu
-    'accessKey' => 'U0dQR3lad2wyb1F6Q0lGNGt4MllJTUtrRzJzWXBCbVFnZ2duLW9IUQ==',
-    'secretKey' => 'TTdkb1MxUUdVVEdDVkloTVQyWndVQ2l2bE92QzhhVFRIRzJoTlMwTQ==',
+    'accessKey' => 'xxxx',
+    'secretKey' => 'xxxx',
 ];

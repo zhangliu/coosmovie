@@ -10,3 +10,4 @@ src/backend/config/db.php
 src/backend/composer.phar
 src/frontend/dump.rdb
 src/frontend/dist
+src/backend/config/params.php
