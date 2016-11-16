@@ -18,7 +18,7 @@ export default class Nav extends React.Component {
     return (
       <Row className='nav-container'>
         <Col span={2} offset={1}>
-          <a href='/' className='nav-logo'>Emoive !</a>
+          <a href='/' className='nav-logo'>Coosmovie!</a>
         </Col>
         <Col span={8}>
           <Menu
