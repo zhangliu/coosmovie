@@ -52,23 +52,26 @@
 
   /**inputBar**/
   .input-bar {
-    display: flex;
-    position: relative;
     margin-top: 8px;
-    .input-bar-left {
-      padding: 8px;
-      background: white;
-      border: 1px solid #eee;
-      border-right: 0px;
-      width: 100%;
-    }
-    .input-bar-right {
-      padding: 8px;
-      background: white;
-      border: 1px solid #eee;
-      border-left: 0px;
-      .button {
-        height: 46px;
+    .input-bar-down {
+      display: flex;
+      position: relative;
+      margin-top: 4px;
+      .input-bar-left {
+        padding: 8px;
+        background: white;
+        border: 1px solid #eee;
+        border-right: 0px;
+        width: 100%;
+      }
+      .input-bar-right {
+        padding: 8px;
+        background: white;
+        border: 1px solid #eee;
+        border-left: 0px;
+        .button {
+          height: 46px;
+        }
       }
     }
   }

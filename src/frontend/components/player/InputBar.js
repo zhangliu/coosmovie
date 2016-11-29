@@ -1,5 +1,5 @@
 import React from 'react'
-import {Input, Button} from 'antd'
+import {Input, Button, Tag} from 'antd'
 import ZlPopover from '../../libs/zlPopover/Index'
 import positionHelper from '../../libs/positionHelper'
 import translateHelper from '../../libs/translateHelper'
@@ -18,19 +18,26 @@ export default class className extends React.Component {
   render() {
     return (
       <div className='input-bar'>
-        <div className='input-bar-left'>
-          <Input
-            ref={node => this.input = node}
-            className='input'
-            type="textarea"
-            onChange={this.onChange.bind(this)}
-            autosize={{ minRows: 2, maxRows: 2 }}/>
-          <ZlPopover
-            ref={node => this.popover = node}
-            data={this.state.popover}/>
+        <div>
+          <Tag>/r: 重播</Tag>
+          <Tag>//: 提示下一个单词</Tag>
+          <Tag>/s: 查询单词信息</Tag>
         </div>
-        <div className='input-bar-right'>
-          <Button className='button' type="primary">提交</Button>
+        <div className='input-bar-down'>
+          <div className='input-bar-left'>
+            <Input
+              ref={node => this.input = node}
+              className='input'
+              type="textarea"
+              onChange={this.onChange.bind(this)}
+              autosize={{ minRows: 2, maxRows: 2 }}/>
+            <ZlPopover
+              ref={node => this.popover = node}
+              data={this.state.popover}/>
+          </div>
+          <div className='input-bar-right'>
+            <Button className='button' type="primary">提交</Button>
+          </div>
         </div>
       </div>
     )
