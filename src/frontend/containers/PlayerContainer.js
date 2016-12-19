@@ -68,7 +68,7 @@ export default class className extends React.Component {
       onProcess: status => { this.setIflyState('status', status) },
       onError: (err) => this.setIflyState('err', err),
     })
-    session.start(config.iflyParams);
+    session.start(config.iflyInfo.params);
   }
 
   setIflyState(key, value) {
