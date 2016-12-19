@@ -3,7 +3,7 @@ import {Row, Col} from 'antd'
 import Bar from './Bar'
 import Mask from './Mask'
 import Detail from './Detail'
-import InputBar from './InputBar'
+import IflyBar from './IflyBar'
 import sentenceLogic from '../logics/sentence'
 import config from '../../config'
 
@@ -80,8 +80,9 @@ export default class className extends React.Component {
             </Row>
           </Col>
           <Col span={22} offset={1}>
-            <InputBar
-              onInputBarChange={this.onInputBarChange.bind(this)}/>
+            <IflyBar
+              handleOnTalking={this.props.handleOnTalking}
+              iflyInfo={this.props.iflyInfo}/>
           </Col>
         </Row>
       </div>
@@ -149,81 +150,5 @@ export default class className extends React.Component {
       return
     }
     this.player.play()
-  }
-
-  onInputBarChange(obj) {
-    const index = this.state.segmentInfo.index
-    const segment = this.state.segmentInfo.segments[index]
-
-    // 显示写正确的台词
-    const reg = /\s|[^a-zA-Z0-9]/g
-    const showStr = sentenceLogic.getCompleteStr(segment.sentence, obj.content)
-    console.log('showStr==>', showStr)
-    if (segment.sentence.indexOf(showStr) === 0) {
-      this.state.mask.sentence = this.state.mask.sentence.length > showStr.length
-      ? this.state.mask.sentence
-      : showStr
-      this.setState(this.state)
-    }
-
-    // 如果台词都写对了，就进入下一句
-    if (segment.sentence.replace(reg, '') === showStr.replace(reg, '')) {
-      this.state.segmentInfo.index++
-      this.state.mask.sentence = ''
-      this.setState(this.state)
-      this.props.segmentIndexChange(this.state.segmentInfo.index)
-      this.player.play()
-      this.updateScore()
-      return
-    }
-
-    switch (obj.command) {
-      case 'replay':
-        {
-          const time = segment.startTime / 1000 - 1
-          this.player.currentTime = time
-          this.state.currentSeconds = time
-          this.setState(this.state)
-          this.player.play()
-        }
-        break
-      case 'pauseGo':
-        if (this.player.paused) {
-          this.player.play()
-          break
-        }
-        this.player.pause()
-        break
-      case 'back':
-        this.player.currentTime = this.player.currentTime - 5
-        this.player.play()
-        break
-      case 'forward':
-        this.player.currentTime = this.player.currentTime + 5
-        this.player.play()
-        break
-      case 'slow':
-        this.player.playbackRate = this.player.playbackRate - 0.5
-        break
-      case 'fast':
-        this.player.playbackRate = this.player.playbackRate + 0.5
-        break
-      case 'showSentence':
-        if (segment) {
-          const sentence = this.state.mask.sentence
-          this.state.mask.sentence = sentenceLogic.getMoreStr(segment.sentence, sentence)
-          this.setState(this.state)
-          this.props.addPlayLog({
-            movie_slice_id: this.props.movieSlice.id,
-            type: 'show_sentence',
-            segment_index: this.state.segmentInfo.index,
-            content: this.state.mask.sentence,
-          })
-        }
-        this.updateScore()
-        break
-      default:
-        break
-    }
   }
 }
