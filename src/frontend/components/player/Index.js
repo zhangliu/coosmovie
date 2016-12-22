@@ -22,13 +22,12 @@ export default class className extends React.Component {
       },
       mask: {
         height: 23,
-        fontSize: '14px',
         sentence: '',
         translate: '',
       },
       totalSeconds: 0,
       currentSeconds: 0,
-      scoreInfo: {},
+      iflyDisabled: true,
     }
   }
 
@@ -43,7 +42,6 @@ export default class className extends React.Component {
       const info = this.state.segmentInfo
       this.player.currentTime = info.segments[info.index].startTime / 1000
     })
-    this.updateScore()
   }
 
   render() {
@@ -67,21 +65,21 @@ export default class className extends React.Component {
                   currentSeconds={this.state.currentSeconds}
                   onUpdateProgress={this.onUpdateProgress.bind(this)}/>
                 <Mask
+                  recognizeSentence={this.props.iflyInfo.result}
                   sentence={this.state.mask.sentence}
-                  height={this.state.mask.height}
-                  fontSize={this.state.mask.fontSize}/>
+                  height={this.state.mask.height}/>
               </Col>
               <Col span={5}>
                 <Detail
                   currentSlice={this.props.movieSlice}
-                  movieSlices={this.props.movieSlices}
-                  scoreInfo={this.state.scoreInfo}/>
+                  movieSlices={this.props.movieSlices}/>
               </Col>
             </Row>
           </Col>
           <Col span={22} offset={1}>
             <IflyBar
               handleOnTalking={this.props.handleOnTalking}
+              disabled={this.state.iflyDisabled}
               iflyInfo={this.props.iflyInfo}/>
           </Col>
         </Row>
@@ -108,34 +106,17 @@ export default class className extends React.Component {
         if (segments[index] && (this.player.currentTime * 1000 - segments[index].endTime) > 1000) {
           this.player.currentTime = segments[index].startTime / 1000
         }
+        this.state.mask.sentence = segments[index].sentence
+        this.state.iflyDisabled = true
         this.state.currentSeconds = this.player.currentTime
         this.setState(this.state)
       }, 100)
     }
-    this.props.addPlayLog({
-      movie_slice_id: this.props.movieSlice.id,
-      type: 'start_play',
-      segment_index: this.state.segmentInfo.index,
-    })
-  }
-
-  async updateScore() {
-    const scoreInfo = await this.props.getScoreInfo()
-    this.state.scoreInfo = scoreInfo
-    this.state.scoreInfo.segmentIndex = this.state.segmentInfo.index
-    this.state.scoreInfo.segmentLength = this.state.segmentInfo.segments.length
-    this.state.scoreInfo.currentTime = this.player.currentTime
-    this.setState(this.state)
   }
 
   onPause() {
     clearInterval(this.timer)
-    this.props.addPlayLog({
-      movie_slice_id: this.props.movieSlice.id,
-      type: 'stop_play',
-      segment_index: this.state.segmentInfo.index,
-    })
-    this.updateScore()
+    this.setState({iflyDisabled: false})
   }
 
   onUpdateProgress(currentSeconds) {

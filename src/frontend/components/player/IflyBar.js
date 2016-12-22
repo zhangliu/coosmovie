@@ -14,7 +14,7 @@ const style = {
     padding: '0px 16px',
   },
   button1: {
-    width: '130px',
+    width: '150px',
   },
 }
 
@@ -22,31 +22,14 @@ export default class className extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      isTalking: false,
-      volume: 10,
-      sentence: 'the world of investing, can be a jungle. bulls, bears dangers at every turn.',
-      status: 'none',
+      volume: props.iflyInfo.volume,
+      result: props.iflyInfo.result,
+      status: props.iflyInfo.status,
     }
   }
 
   componentWillReceiveProps(props) {
-    if (!props.iflyInfo) {
-      return
-    }
-
-    if (props.iflyInfo.result) {
-      if (props.iflyInfo.result.err) {
-        const err = props.iflyInfo.result.err
-        const des = props.iflyInfo.result.result
-        this.setState({sentence: `error code: ${err}, error description: ${des}`})
-      } else {
-        this.setState({sentence: props.iflyInfo.result ? props.iflyInfo.result : '无法识别!'})
-      }
-    }
-    this.setState({
-      volume: props.iflyInfo.volume,
-      status: props.iflyInfo.status ? props.iflyInfo.status : 'none',
-    })
+    this.setState(props.iflyInfo)
   }
 
   renderBar() {
@@ -58,8 +41,6 @@ export default class className extends React.Component {
       case 'normalVolume':
       case 'started':
         tip = `倾听中${Array(this.state.volume).fill('.').join('')}`;
-        if (this.state.volume> 20)
-        console.log(this.state.volume);
         break;
       case 'onStop':
         tip = '等待结果...';
@@ -71,17 +52,21 @@ export default class className extends React.Component {
       default:
         break
     }
-    return <Button style={style.button1} onClick={this.handleOnTalking.bind(this)} size='large' type='primary'>{tip}</Button>
+    return <Button
+            style={style.button1}
+            onClick={this.handleOnTalking.bind(this)}
+            size='large'
+            disabled={this.props.disabled}
+            type='primary'>{tip}</Button>
   }
 
   handleOnTalking() {
-    console.log(this.state.status);
     this.props.handleOnTalking()
   }
 
   renderSentence() {
-    const words = this.state.sentence.replace(/\s+/g, ' ').split(' ')
-    return words.map((w, i) => <Tag key={i}>{w}</Tag>)
+    const words = this.state.result.replace(/\s+/g, ' ').split(' ')
+    return words.filter(w => !!w).map((w, i) => <Tag key={i}>{w}</Tag>)
   }
 
   render() {

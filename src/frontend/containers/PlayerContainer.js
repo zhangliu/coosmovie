@@ -14,7 +14,11 @@ export default class className extends React.Component {
       playInfo: {},
       movieSlices: [],
       scoreInfo: 0,
-      iflyInfo: {},
+      iflyInfo: {
+        volume: 10,
+        result: '',
+        status: 'none',
+      },
     }
   }
 
@@ -63,8 +67,16 @@ export default class className extends React.Component {
 
   async handleOnTalking() {
     const session = iflyHepler.getSession({
-      onResult: (err, result) => this.setIflyState('result', {err, result}),
-      onVolume: volume => this.setIflyState('volume', volume),
+      onResult: (err, result) => {
+        if (+err) {
+          return this.setIflyState('result', `error code: ${err}, error description: ${result}`)
+        }
+        this.setIflyState('result', result ? result : '无法识别！')
+      },
+      onVolume: volume => {
+        volume = +(volume * 5 / config.iflyInfo.maxVolume).toFixed(0)
+        this.setIflyState('volume', volume)
+      },
       onProcess: status => { this.setIflyState('status', status) },
       onError: (err) => this.setIflyState('err', err),
     })
@@ -72,6 +84,9 @@ export default class className extends React.Component {
   }
 
   setIflyState(key, value) {
+    if (this.state.iflyInfo[key] === value) {
+      return
+    }
     this.state.iflyInfo[key] = value
     this.setState(this.state)
   }
