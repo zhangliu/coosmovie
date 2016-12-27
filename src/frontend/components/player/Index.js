@@ -4,7 +4,7 @@ import Bar from './Bar'
 import Mask from './Mask'
 import Detail from './Detail'
 import IflyBar from './IflyBar'
-import sentenceLogic from '../logics/sentence'
+import iflyHepler from '../../libs/iflyHepler'
 import config from '../../config'
 
 import './index.scss'
@@ -27,7 +27,13 @@ export default class className extends React.Component {
       },
       totalSeconds: 0,
       currentSeconds: 0,
-      iflyDisabled: true,
+
+      iflyInfo: {
+        volume: 10,
+        result: '',
+        status: 'none',
+        disabled: true,
+      },
     }
   }
 
@@ -65,7 +71,8 @@ export default class className extends React.Component {
                   currentSeconds={this.state.currentSeconds}
                   onUpdateProgress={this.onUpdateProgress.bind(this)}/>
                 <Mask
-                  recognizeSentence={this.props.iflyInfo.result}
+                  recognizeSentence={this.state.iflyInfo.result}
+                  onRecognizeOk={this.onRecognizeOk.bind(this)}
                   sentence={this.state.mask.sentence}
                   height={this.state.mask.height}/>
               </Col>
@@ -78,9 +85,8 @@ export default class className extends React.Component {
           </Col>
           <Col span={22} offset={1}>
             <IflyBar
-              handleOnTalking={this.props.handleOnTalking}
-              disabled={this.state.iflyDisabled}
-              iflyInfo={this.props.iflyInfo}/>
+              onTalking={this.onTalking.bind(this)}
+              iflyInfo={this.state.iflyInfo}/>
           </Col>
         </Row>
       </div>
@@ -107,7 +113,7 @@ export default class className extends React.Component {
           this.player.currentTime = segments[index].startTime / 1000
         }
         this.state.mask.sentence = segments[index].sentence
-        this.state.iflyDisabled = true
+        this.state.iflyInfo.disabled = true
         this.state.currentSeconds = this.player.currentTime
         this.setState(this.state)
       }, 100)
@@ -116,7 +122,8 @@ export default class className extends React.Component {
 
   onPause() {
     clearInterval(this.timer)
-    this.setState({iflyDisabled: false})
+    this.state.iflyInfo.disabled = false
+    this.setState({iflyInfo: this.state.iflyInfo})
   }
 
   onUpdateProgress(currentSeconds) {
@@ -131,5 +138,39 @@ export default class className extends React.Component {
       return
     }
     this.player.play()
+  }
+
+  onTalking() {
+    const session = iflyHepler.getSession({
+      onResult: (err, result) => {
+        if (+err) {
+          return this.setIflyState('result', `error code: ${err}, error description: ${result}`)
+        }
+        this.setIflyState('result', result ? result+' bulls' : '无法识别！')
+      },
+      onVolume: volume => {
+        volume = +(volume * 5 / config.iflyInfo.maxVolume).toFixed(0)
+        this.setIflyState('volume', volume)
+      },
+      onProcess: status => { this.setIflyState('status', status) },
+      onError: (err) => this.setIflyState('err', err),
+    })
+    session.start(config.iflyInfo.params);
+  }
+
+  setIflyState(key, value) {
+    if (this.state.iflyInfo[key] === value) {
+      return
+    }
+    this.state.iflyInfo[key] = value
+    this.setState(this.state)
+  }
+
+  onRecognizeOk() {
+    this.state.segmentInfo.index++
+    this.state.iflyInfo.result = ''
+    this.setState(this.state, () => {
+      this.player.play()
+    })
   }
 }

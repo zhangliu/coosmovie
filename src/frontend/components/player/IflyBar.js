@@ -54,14 +54,10 @@ export default class className extends React.Component {
     }
     return <Button
             style={style.button1}
-            onClick={this.handleOnTalking.bind(this)}
+            onClick={this.props.onTalking}
             size='large'
-            disabled={this.props.disabled}
+            disabled={this.props.iflyInfo.disabled}
             type='primary'>{tip}</Button>
-  }
-
-  handleOnTalking() {
-    this.props.handleOnTalking()
   }
 
   renderSentence() {

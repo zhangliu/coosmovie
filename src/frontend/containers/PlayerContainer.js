@@ -2,7 +2,6 @@ import React from 'react'
 import {message} from 'antd'
 import config from '../config'
 import rest from '../libs/restHelper'
-import iflyHepler from '../libs/iflyHepler'
 
 import Player from '../components/player/Index'
 
@@ -14,11 +13,6 @@ export default class className extends React.Component {
       playInfo: {},
       movieSlices: [],
       scoreInfo: 0,
-      iflyInfo: {
-        volume: 10,
-        result: '',
-        status: 'none',
-      },
     }
   }
 
@@ -40,8 +34,6 @@ export default class className extends React.Component {
         playInfo={this.state.playInfo}
         addPlayLog={this.addPlayLog.bind(this)}
         getScoreInfo={this.getScoreInfo.bind(this)}
-        handleOnTalking={this.handleOnTalking.bind(this)}
-        iflyInfo={this.state.iflyInfo}
         segmentIndexChange={this.segmentIndexChange.bind(this)}/>
     )
   }
@@ -63,31 +55,5 @@ export default class className extends React.Component {
 
   async getScoreInfo() {
     return await rest.get(`${config.apiUrl}/play-log/get-score-info?movieSliceId=${this.state.movieSlice.id}`)
-  }
-
-  async handleOnTalking() {
-    const session = iflyHepler.getSession({
-      onResult: (err, result) => {
-        if (+err) {
-          return this.setIflyState('result', `error code: ${err}, error description: ${result}`)
-        }
-        this.setIflyState('result', result ? result : '无法识别！')
-      },
-      onVolume: volume => {
-        volume = +(volume * 5 / config.iflyInfo.maxVolume).toFixed(0)
-        this.setIflyState('volume', volume)
-      },
-      onProcess: status => { this.setIflyState('status', status) },
-      onError: (err) => this.setIflyState('err', err),
-    })
-    session.start(config.iflyInfo.params);
-  }
-
-  setIflyState(key, value) {
-    if (this.state.iflyInfo[key] === value) {
-      return
-    }
-    this.state.iflyInfo[key] = value
-    this.setState(this.state)
   }
 }
