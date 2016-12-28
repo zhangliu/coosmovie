@@ -12,13 +12,15 @@ export default class className extends React.Component {
     const newRecognizedWords = this.getNewRecognizedWords(this.state.oldRecognizedWords,
       props.recognizeSentence, props.sentence)
     if (newRecognizedWords.length > 0) {
-      this.props.onRecognizeOk()
+      console.log(newRecognizedWords, props.sentence, '-------');
       this.state.recognizeSentence = props.recognizeSentence
       this.state.oldRecognizedWords = this.state.oldRecognizedWords.concat(newRecognizedWords)
 
       const sentenceWords = this.getSentenceWords(props.sentence)
-      if (this.state.oldRecognizedWords.length >= sentenceWords.length) {
+      if (this.state.oldRecognizedWords.length >= sentenceWords.length * 0.5) {
+        this.state.oldRecognizedWords = []
         this.props.onRecognizeOk()
+        return
       }
       this.setState(this.state)
     }

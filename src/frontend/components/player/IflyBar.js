@@ -56,7 +56,6 @@ export default class className extends React.Component {
             style={style.button1}
             onClick={this.props.onTalking}
             size='large'
-            disabled={this.props.iflyInfo.disabled}
             type='primary'>{tip}</Button>
   }
 
