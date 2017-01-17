@@ -1,33 +1,22 @@
 import React from 'react'
-import {Progress} from 'antd'
 import positionHelper from '../../libs/positionHelper'
+
+const style = {
+  css1: {
+    background: '#f1f1f1',
+    border: '1px solid #ddd',
+    borderTop: '0px',
+    padding: '12px',
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
+}
 
 export default class className extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
     }
-  }
-
-  render() {
-    const totalMinutes = this.getMinuteFormat(this.props.totalSeconds)
-    const currentMinutes = this.getMinuteFormat(this.props.currentSeconds)
-    const percent = this.props.currentSeconds / this.props.totalSeconds * 100
-    return (
-      <div className='bar'>
-        <div
-          onClick={this.onClick.bind(this)}
-          ref={node => this.bar = node}
-          className='bar-left'>
-          <Progress
-            percent={percent}
-            format={() => ''}
-            status='success'
-            strokeWidth={1} />
-        </div>
-        <div className='bar-right'>{currentMinutes} / {totalMinutes}</div>
-      </div>
-    )
   }
   getMinuteFormat(totalSeconds) {
     const minutes = `000${Math.floor(totalSeconds / 60)}`.substr(-3)
@@ -39,5 +28,15 @@ export default class className extends React.Component {
     const position = positionHelper.getRelativePosition(e)
     const currentSeconds = Math.floor(this.props.totalSeconds * (position.left / width))
     this.props.onUpdateProgress(currentSeconds)
+  }
+
+  render() {
+    const totalMinutes = this.getMinuteFormat(this.props.totalSeconds)
+    const currentMinutes = this.getMinuteFormat(this.props.currentSeconds)
+    return (
+      <div style={style.css1}>
+        <div>{currentMinutes} / {totalMinutes}</div>
+      </div>
+    )
   }
 }

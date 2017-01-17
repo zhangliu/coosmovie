@@ -3,15 +3,14 @@ import {Router, Route, IndexRoute, browserHistory} from 'react-router'
 
 import IndexContainer from '../containers/IndexContainer'
 import MovieListContainer from '../containers/MovieListContainer'
-import PlayerContainer from '../containers/PlayerContainer'
+import MovieSliceContainer from '../containers/MovieSliceContainer'
 import LoginContainer from '../containers/LoginContainer'
 
 export default () => (
   <Router history={browserHistory}>
     <Route path="/" component={IndexContainer}>
       <IndexRoute component={MovieListContainer}/>
-      <Route path='movie/:id' component={PlayerContainer}/>
-      <Route path='movie-slice/:id' component={PlayerContainer}/>
+      <Route path='movie-slice/:id' component={MovieSliceContainer}/>
       <Route path='login' component={LoginContainer}/>
     </Route>
   </Router>

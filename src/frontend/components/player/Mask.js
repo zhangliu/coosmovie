@@ -40,7 +40,7 @@ export default class className extends React.Component {
       if (this.state.oldRecognizedWords.indexOf(word) !== -1) {
         return <a style={{padding: '4px', fontSize: '14px', color: '#87d068'}} key={i}>{w}</a>
       }
-      return <a style={{padding: '4px', fontSize: '14px', color: '#fff'}} key={i}>{w}</a>
+      return <a style={{padding: '4px', fontSize: '14px', color: '#eee'}} key={i}>{w}</a>
     })
   }
 
@@ -71,8 +71,8 @@ export default class className extends React.Component {
     return (
       <div
         className='mask'
-        style={{height: this.props.height}}>
-        <div>{this.renderSentence()}</div>
+        style={{height: this.props.height, marginTop: -this.props.height}}>
+        {this.renderSentence()}
       </div>
     )
   }

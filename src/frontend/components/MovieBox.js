@@ -15,7 +15,8 @@ export default class MovieBox extends React.Component {
       <a
         className={`movie-box-${this.state.movie.type}`}
         href={`movie-slice/${this.state.movie.sliceIds[0]}`}>
-        <img src={this.state.movie.img_src}
+        <img
+          src={this.state.movie.img_src}
           onMouseOver={this.onMouseOver.bind(this)}
           onMouseOut={this.onMouseOut.bind(this)}/>
         <span>{this.state.movie.name}</span>
@@ -23,7 +24,7 @@ export default class MovieBox extends React.Component {
     )
   }
 
-  onMouseOver(e) {
+  onMouseOver() {
     console.log('')
   }
 

@@ -5,6 +5,13 @@ import iflyHepler from '../libs/iflyHepler'
 import rest from '../libs/restHelper'
 
 import Player from '../components/player/Index'
+import IflyBar from '../components/IflyBar'
+
+const style = {
+  css1: {
+
+  },
+}
 
 export default class className extends React.Component {
   constructor(props) {
@@ -32,7 +39,7 @@ export default class className extends React.Component {
     this.setState(this.state)
   }
 
-  async segmentIndexChange(index) {
+  async onSegmentIndexChange(index) {
     if (!this.state.movieSlice) {
       return
     }
@@ -43,13 +50,13 @@ export default class className extends React.Component {
     }
   }
 
-  async addPlayLog(log) {
-    await rest.post(`${config.apiUrl}/play-log/add`, log)
-  }
-
-  async getScoreInfo() {
-    return await rest.get(`${config.apiUrl}/play-log/get-score-info?movieSliceId=${this.state.movieSlice.id}`)
-  }
+  // async addPlayLog(log) {
+  //   await rest.post(`${config.apiUrl}/play-log/add`, log)
+  // }
+  //
+  // async getScoreInfo() {
+  //   return await rest.get(`${config.apiUrl}/play-log/get-score-info?movieSliceId=${this.state.movieSlice.id}`)
+  // }
 
   onTalking() {
     const session = iflyHepler.getSession({
@@ -57,7 +64,7 @@ export default class className extends React.Component {
         if (+err) {
           return this.setIflyState('result', `error code: ${err}, error description: ${result}`)
         }
-        this.setIflyState('result', result ? result + ' bulls' : '无法识别！')
+        this.setIflyState('result', result ? result : '无法识别！')
       },
       onVolume: volume => {
         volume = +(volume * 5 / config.iflyInfo.maxVolume).toFixed(0)
@@ -74,20 +81,20 @@ export default class className extends React.Component {
       return
     }
     this.state.iflyInfo[key] = value
-    this.setState(this.state)
+    this.setState({iflyInfo: this.state.iflyInfo})
   }
 
   render() {
     return (
-      <Player
-        movieSlice={this.state.movieSlice}
-        movieSlices={this.state.movieSlices}
-        playInfo={this.state.playInfo}
-        addPlayLog={this.addPlayLog.bind(this)}
-        getScoreInfo={this.getScoreInfo.bind(this)}
-        onTalking={this.onTalking.bind(this)}
-        iflyInfo={this.state.iflyInfo}
-        segmentIndexChange={this.segmentIndexChange.bind(this)}/>
+      <div style={style.css1}>
+        <Player
+          movieSlice={this.state.movieSlice}
+          movieSlices={this.state.movieSlices}
+          playInfo={this.state.playInfo}
+          iflyInfo={this.state.iflyInfo}
+          onSegmentIndexChange={this.onSegmentIndexChange.bind(this)}/>
+        <IflyBar onTalking={this.onTalking.bind(this)} iflyInfo={this.state.iflyInfo}/>
+      </div>
     )
   }
 }

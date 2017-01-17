@@ -10,7 +10,7 @@ export default class IndexContainer extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      movies: []
+      movies: [],
     }
   }
 
@@ -25,8 +25,8 @@ export default class IndexContainer extends React.Component {
         {
           this.state.movies.map((movie, index) => {
             return <MovieBox
-              key={index}
-              data={movie}/>
+                    key={index}
+                    data={movie}/>
           })
         }
       </MovieList>

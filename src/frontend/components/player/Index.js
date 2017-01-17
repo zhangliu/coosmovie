@@ -3,7 +3,6 @@ import {Row, Col} from 'antd'
 import Bar from './Bar'
 import Mask from './Mask'
 import Detail from './Detail'
-import IflyBar from './IflyBar'
 import config from '../../config'
 
 import './index.scss'
@@ -26,12 +25,10 @@ export default class className extends React.Component {
       },
       totalSeconds: 0,
       currentSeconds: 0,
-      iflyInfo: props.iflyInfo,
     }
   }
 
   componentWillReceiveProps(props) {
-
     const stateInfo = {}
     if (this.state.segmentInfo.segments.length <= 0) {
       const segments = JSON.parse(props.movieSlice.segments);
@@ -83,7 +80,6 @@ export default class className extends React.Component {
 
   onPause() {
     clearInterval(this.timer)
-    this.setState({iflyInfo: this.state.iflyInfo})
   }
 
   onUpdateProgress(currentSeconds) {
@@ -101,9 +97,7 @@ export default class className extends React.Component {
   }
 
   onRecognizeOk() {
-    console.log(this.state.segmentInfo.index, '---->>>>');
     this.state.segmentInfo.index++
-    this.state.iflyInfo.result = ''
     this.setState(this.state, () => {
       this.player.play()
     })
@@ -112,42 +106,25 @@ export default class className extends React.Component {
   render() {
     return (
       <div className='player'>
-        <Row>
-          <Col span={22} offset={1} className='col1'>
-            <Row>
-              <Col span={19}>
-                <video
-                  id='player'
-                  ref={node => this.player = node}
-                  onPlay={this.onPlay.bind(this)}
-                  onPause={this.onPause.bind(this)}
-                  onClick={this.onClick.bind(this)}
-                  onCanPlay={this.onCanPlay.bind(this)}
-                  src={this.state.src}
-                  autoPlay={true}/>
-                <Bar
-                  totalSeconds={this.state.totalSeconds}
-                  currentSeconds={this.state.currentSeconds}
-                  onUpdateProgress={this.onUpdateProgress.bind(this)}/>
-                <Mask
-                  recognizeSentence={this.state.iflyInfo.result}
-                  onRecognizeOk={this.onRecognizeOk.bind(this)}
-                  sentence={this.state.mask.sentence}
-                  height={this.state.mask.height}/>
-              </Col>
-              <Col span={5}>
-                <Detail
-                  currentSlice={this.props.movieSlice}
-                  movieSlices={this.props.movieSlices}/>
-              </Col>
-            </Row>
-          </Col>
-          <Col span={22} offset={1}>
-            <IflyBar
-              onTalking={this.props.onTalking}
-              iflyInfo={this.state.iflyInfo}/>
-          </Col>
-        </Row>
+        <video
+          id='player'
+          className='video'
+          ref={node => this.player = node}
+          onPlay={this.onPlay.bind(this)}
+          onPause={this.onPause.bind(this)}
+          onClick={this.onClick.bind(this)}
+          onCanPlay={this.onCanPlay.bind(this)}
+          src={this.state.src}
+          autoPlay={true}/>
+        <Mask
+          recognizeSentence={this.props.iflyInfo.result}
+          onRecognizeOk={this.onRecognizeOk.bind(this)}
+          sentence={this.state.mask.sentence}
+          height={this.state.mask.height}/>
+        <Bar
+          totalSeconds={this.state.totalSeconds}
+          currentSeconds={this.state.currentSeconds}
+          onUpdateProgress={this.onUpdateProgress.bind(this)}/>
       </div>
     )
   }

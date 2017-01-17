@@ -3,6 +3,14 @@ import React from 'react'
 import Nav from '../components/Nav'
 import Footer from '../components/Footer'
 import config from '../config'
+import restHelper from '../libs/restHelper'
+
+const style = {
+  css1: {
+    width: '1000px',
+    margin: '0 auto',
+  },
+}
 
 export default class IndexContainer extends React.Component {
   constructor(props) {
@@ -13,12 +21,7 @@ export default class IndexContainer extends React.Component {
   }
 
   async componentDidMount() {
-    const option = {
-      credentials: 'include',
-      method: 'get',
-    }
-    const res = await fetch(`${config.apiUrl}/user/get`, option)
-    this.state.user = (await res.json()).data
+    this.state.user = await restHelper.get(`${config.apiUrl}/user/get`)
     this.setState(this.state)
   }
 
@@ -26,7 +29,9 @@ export default class IndexContainer extends React.Component {
     return (
       <div>
         <Nav menu='home' user={this.state.user}/>
-        {this.props.children}
+        <div style={style.css1}>
+          {this.props.children}
+        </div>
         <Footer/>
       </div>
     )
