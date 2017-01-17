@@ -20,22 +20,17 @@ module.exports = {
     loaders: [
       {
         test: /\.js$/i,
-        loader: 'babel',
+        loader: 'babel-loader',
         query: {
           presets: ['react', 'latest'],
           plugins: [['import', {libraryName: 'antd', style: true}]],
         },
         exclude: /node_modules/,
       },
-      {test: /\.scss$/i, loader: extractCSS.extract(['css', 'sass']), exclude: /node_modules/},
-      {test: /\.less$/i, loader: extractCSS.extract(['css', 'less'])},
+      {test: /\.scss$/i, loader: extractCSS.extract(['css-loader', 'sass-loader']), exclude: /node_modules/},
+      // antd 在 node_modules 中，所以不能忽略
+      {test: /\.less$/i, loader: extractCSS.extract(['css-loader', 'less-loader'])},
     ],
-    // resolve: {
-    //   extensions: ['', '.js', '.jsx', '.css', '.scss', '.less'],
-    //   modulesDirectories: [
-    //     'node_modules',
-    //   ],
-    // },
   },
   // devtool: '#source-map',
   plugins: [
@@ -44,7 +39,7 @@ module.exports = {
     //     warnings: false,
     //   },
     // }),
-    new webpack.optimize.CommonsChunkPlugin('vendor', 'js/[chunkhash].vendor.bundle.js'),
+    new webpack.optimize.CommonsChunkPlugin({name: 'vendor'}),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'template.html',
@@ -52,10 +47,5 @@ module.exports = {
       chunksSortMode: 'dependency',
     }),
     extractCSS,
-    /*new webpack.DefinePlugin({
-      'process.env': {
-        // NODE_ENV: JSON.stringify('production'),
-      },
-    }),*/
   ],
 };
