@@ -5,12 +5,7 @@ import Footer from '../components/Footer'
 import config from '../config'
 import restHelper from '../libs/restHelper'
 
-const style = {
-  css1: {
-    width: '1000px',
-    margin: '0 auto',
-  },
-}
+import './indexContainer.scss'
 
 export default class IndexContainer extends React.Component {
   constructor(props) {
@@ -27,9 +22,9 @@ export default class IndexContainer extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className='indexContainer'>
         <Nav menu='home' user={this.state.user}/>
-        <div style={style.css1}>
+        <div className='content'>
           {this.props.children}
         </div>
         <Footer/>

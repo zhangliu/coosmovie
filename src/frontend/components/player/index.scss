@@ -1,12 +1,84 @@
 .player {
-  .video {
-    width: 100%;
+  background: #fff;
+
+  .content {
+    background: #333;
+    display: flex;
+    flex-direction: row;
+    .left-div {
+
+      .mask {
+        background: #000;
+        position: relative;
+        z-index: 1000;
+        text-align: center;
+      }
+
+      .bar {
+        background: #f1f1f1;
+        border: 1px solid #ddd;
+        border-top: 0px;
+        padding: 12px;
+        display: flex;
+        justify-content: flex-end;
+      }
+    }
+
+    .right-div {
+      padding: 8px;
+      color: #aaa;
+
+      .sliceList {
+        display: flex;
+        flex-wrap: wrap;
+
+        .slice {
+          padding: 4px;
+          background: #444;
+          margin: 4px;
+          width: 32px;
+          color: #ccc;
+          text-align: center;
+          border: 1px solid #555;
+        }
+
+        .slice-active {
+          background: #333;
+        }
+      }
+
+      .separate {
+        border: 1px solid #444;
+        border-top: 0px;
+        margin: 16px 0px;
+      }
+
+      .scoreTitle {
+        text-align: center;
+      }
+
+      .scoreInfo {
+        text-align: center;
+        font-size: 40px;
+      }
+    }
   }
 
-  .mask {
-    background: #000;
-    position: relative;
-    z-index: 1000;
+
+  .iflyBar {
     text-align: center;
+    margin: 16px auto;
+    padding: 16px 0px;
+
+    .sentence {
+      text-align: center;
+      margin: 16px auto;
+      padding: 0px 16px;
+    }
+
+    .controllButton {
+      width: 150px;
+      margin: 0px 16px;
+    }
   }
 }

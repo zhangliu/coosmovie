@@ -1,6 +1,4 @@
 import React from 'react'
-import {Rate} from 'antd'
-import config from '../../config'
 
 export default class className extends React.Component {
   constructor(props) {
@@ -9,9 +7,23 @@ export default class className extends React.Component {
     }
   }
 
+  getScore(scoreInfo) {
+    return 0
+    // if (!scoreInfo || !scoreInfo.segmentLength) {
+    //   return 0
+    // }
+    // const num1 = (scoreInfo.segmentIndex / scoreInfo.segmentLength) * 100
+    // const num2 = scoreInfo.currentTime > 0
+    //   ? ((scoreInfo.playDuration / scoreInfo.currentTime) - 1) * 0.1
+    //   : 0
+    // const num3 = scoreInfo.helpLogLength * 0.1
+    // const score = num1 - num2 - num3
+    // return score > 0 ? score.toFixed(2) : 0
+  }
+
   render() {
     return (
-      <div className='detail'>
+      <div className='rightNav'>
         <div className='sliceList'>
           {
             this.props.movieSlices.map((slice, index) => {
@@ -35,18 +47,5 @@ export default class className extends React.Component {
         </div>
       </div>
     )
-  }
-
-  getScore(scoreInfo) {
-    if (!scoreInfo || !scoreInfo.segmentLength) {
-      return 0
-    }
-    const num1 = (scoreInfo.segmentIndex / scoreInfo.segmentLength) * 100
-    const num2 = scoreInfo.currentTime > 0
-      ? ((scoreInfo.playDuration / scoreInfo.currentTime) - 1) * 0.1
-      : 0
-    const num3 = scoreInfo.helpLogLength * 0.1
-    const score = num1 - num2 - num3
-    return score > 0 ? score.toFixed(2) : 0
   }
 }

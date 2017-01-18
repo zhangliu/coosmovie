@@ -2,8 +2,8 @@ import React from 'react'
 import {Row, Col} from 'antd'
 import Bar from './Bar'
 import Mask from './Mask'
-import Detail from './Detail'
-import config from '../../config'
+import RightNav from './RightNav'
+import IflyBar from './IflyBar'
 
 import './index.scss'
 
@@ -25,6 +25,7 @@ export default class className extends React.Component {
       },
       totalSeconds: 0,
       currentSeconds: 0,
+      canPlayNext: false,
     }
   }
 
@@ -38,9 +39,7 @@ export default class className extends React.Component {
     }
 
     if (!this.state.src) {
-      this.state.src = config.localUrl
-      ? config.localUrl + props.movieSlice.local_src
-      : config.qiniuUrl + props.movieSlice.src
+      this.state.src = props.movieSlice.src
       stateInfo.src = this.state.src
     }
 
@@ -83,8 +82,6 @@ export default class className extends React.Component {
   }
 
   onUpdateProgress(currentSeconds) {
-    this.state.currentSeconds = currentSeconds
-    this.setState(this.state)
     this.player.currentTime = currentSeconds
   }
 
@@ -98,33 +95,59 @@ export default class className extends React.Component {
 
   onRecognizeOk() {
     this.state.segmentInfo.index++
-    this.setState(this.state, () => {
-      this.player.play()
-    })
+    this.state.canPlayNext = true
+    this.setState(this.state)
+  }
+
+  onNextSentence() {
+    if (this.state.canPlayNext) {
+      this.state.segmentInfo.index++
+      return this.setState(this.state, () => {
+        this.player.play()
+      })
+    }
+    const segments = this.state.segmentInfo.segments
+    const index = this.state.segmentInfo.index
+    this.player.currentTime = segments[index].startTime / 1000
+    this.setState({currentSeconds: this.player.currentTime})
+    this.player.play()
   }
 
   render() {
     return (
       <div className='player'>
-        <video
-          id='player'
-          className='video'
-          ref={node => this.player = node}
-          onPlay={this.onPlay.bind(this)}
-          onPause={this.onPause.bind(this)}
-          onClick={this.onClick.bind(this)}
-          onCanPlay={this.onCanPlay.bind(this)}
-          src={this.state.src}
-          autoPlay={true}/>
-        <Mask
-          recognizeSentence={this.props.iflyInfo.result}
-          onRecognizeOk={this.onRecognizeOk.bind(this)}
-          sentence={this.state.mask.sentence}
-          height={this.state.mask.height}/>
-        <Bar
-          totalSeconds={this.state.totalSeconds}
-          currentSeconds={this.state.currentSeconds}
-          onUpdateProgress={this.onUpdateProgress.bind(this)}/>
+        <div className='content'>
+          <div className='left-div'>
+            <video
+              className='video'
+              ref={node => this.player = node}
+              onPlay={this.onPlay.bind(this)}
+              onPause={this.onPause.bind(this)}
+              onClick={this.onClick.bind(this)}
+              onCanPlay={this.onCanPlay.bind(this)}
+              src={this.state.src}
+              autoPlay={true}/>
+            <Mask
+              recognizeSentence={this.props.iflyInfo.result}
+              onRecognizeOk={this.onRecognizeOk.bind(this)}
+              sentence={this.state.mask.sentence}
+              height={this.state.mask.height}/>
+            <Bar
+              totalSeconds={this.state.totalSeconds}
+              currentSeconds={this.state.currentSeconds}
+              onUpdateProgress={this.onUpdateProgress.bind(this)}/>
+          </div>
+          <div className='right-div'>
+            <RightNav
+              currentSlice={this.props.movieSlice}
+              movieSlices={this.props.movieSlices}/>
+          </div>
+        </div>
+        <IflyBar
+          onTalking={this.props.onTalking}
+          canPlayNext={this.props.canPlayNext}
+          onNextSentence={this.onNextSentence.bind(this)}
+          iflyInfo={this.props.iflyInfo}/>
       </div>
     )
   }

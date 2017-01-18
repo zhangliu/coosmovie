@@ -5,13 +5,6 @@ import iflyHepler from '../libs/iflyHepler'
 import rest from '../libs/restHelper'
 
 import Player from '../components/player/Index'
-import IflyBar from '../components/IflyBar'
-
-const style = {
-  css1: {
-
-  },
-}
 
 export default class className extends React.Component {
   constructor(props) {
@@ -31,6 +24,9 @@ export default class className extends React.Component {
 
   async componentWillMount() {
     const movieSlice = await rest.get(`${config.apiUrl}/movie-slice/get?id=${this.props.params.id}`)
+    movieSlice.src = config.localUrl
+      ? config.localUrl + movieSlice.local_src
+      : config.qiniuUrl + movieSlice.src
     const movieSlices = await rest.get(`${config.apiUrl}/movie-slice/getallslices?movieId=${movieSlice.movie_id}`)
     const playInfo = await rest.get(`${config.apiUrl}/play-info/get?movieSliceId=${this.props.params.id}`)
     this.state.movieSlice = movieSlice
@@ -86,14 +82,16 @@ export default class className extends React.Component {
 
   render() {
     return (
-      <div style={style.css1}>
-        <Player
-          movieSlice={this.state.movieSlice}
-          movieSlices={this.state.movieSlices}
-          playInfo={this.state.playInfo}
-          iflyInfo={this.state.iflyInfo}
-          onSegmentIndexChange={this.onSegmentIndexChange.bind(this)}/>
-        <IflyBar onTalking={this.onTalking.bind(this)} iflyInfo={this.state.iflyInfo}/>
+      <div className='movieSliceContainer'>
+        <div className='content'>
+          <Player
+            movieSlice={this.state.movieSlice}
+            movieSlices={this.state.movieSlices}
+            playInfo={this.state.playInfo}
+            iflyInfo={this.state.iflyInfo}
+            onTalking={this.onTalking.bind(this)}
+            onSegmentIndexChange={this.onSegmentIndexChange.bind(this)}/>
+        </div>
       </div>
     )
   }
