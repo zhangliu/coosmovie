@@ -25,7 +25,6 @@ export default class className extends React.Component {
       },
       totalSeconds: 0,
       currentSeconds: 0,
-      canPlayNext: false,
     }
   }
 
@@ -95,22 +94,15 @@ export default class className extends React.Component {
 
   onRecognizeOk() {
     this.state.segmentInfo.index++
-    this.state.canPlayNext = true
     this.setState(this.state)
   }
 
-  onNextSentence() {
-    if (this.state.canPlayNext) {
-      this.state.segmentInfo.index++
-      return this.setState(this.state, () => {
-        this.player.play()
-      })
-    }
-    const segments = this.state.segmentInfo.segments
-    const index = this.state.segmentInfo.index
-    this.player.currentTime = segments[index].startTime / 1000
-    this.setState({currentSeconds: this.player.currentTime})
-    this.player.play()
+  onChangeSentence(offset) {
+    let index = this.state.segmentInfo.index + offset
+    this.state.segmentInfo.index = index > 0 ? index : 0
+    return this.setState(this.state, () => {
+      this.player.play()
+    })
   }
 
   render() {
@@ -145,8 +137,7 @@ export default class className extends React.Component {
         </div>
         <IflyBar
           onTalking={this.props.onTalking}
-          canPlayNext={this.props.canPlayNext}
-          onNextSentence={this.onNextSentence.bind(this)}
+          onChangeSentence={this.onChangeSentence.bind(this)}
           iflyInfo={this.props.iflyInfo}/>
       </div>
     )

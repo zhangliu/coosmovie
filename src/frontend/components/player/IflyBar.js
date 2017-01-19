@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, Alert, Tag} from 'antd'
+import {Button, Alert, Tag, Icon} from 'antd'
 
 export default class className extends React.Component {
   constructor(props) {
@@ -27,16 +27,25 @@ export default class className extends React.Component {
         break
     }
     return (
-      <div>
+      <div className='controll-bar'>
         <Button
-          className='controllButton'
+          className='talk-button'
           onClick={this.props.onTalking}
           size='large'
           type='primary'>{tip}</Button>
-        <Button
-          className='controllButton'
-          onClick={this.props.onNextSentence}
-          size='large'>{this.props.canPlayNext ? '下一句' : '重放'}</Button>
+        <div className='controll-div'>
+          <Button.Group size='small'>
+            <Button onClick={this.props.onChangeSentence.bind(null, 0)}>
+              重播<Icon type="retweet" />
+            </Button>
+            <Button onClick={this.props.onChangeSentence.bind(null, -1)}>
+              <Icon type="left" />上一句
+            </Button>
+            <Button onClick={this.props.onChangeSentence.bind(null, 1)}>
+              下一句<Icon type="right" />
+            </Button>
+          </Button.Group>
+        </div>
       </div>
     )
   }

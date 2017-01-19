@@ -75,15 +75,26 @@
       margin: 16px;
       padding: 8px 16px;
       border: 1px dashed #ddd;
+      border-radius: 4px;
 
       .tip {
         color: #aaa;
       }
     }
 
-    .controllButton {
-      width: 150px;
-      margin: 0px 16px;
+    .controll-bar {
+      position: relative;
+      .talk-button {
+        width: 150px;
+        margin: 0px 16px;
+      }
+      .controll-div {
+        position: absolute;
+        top: 10px;
+        text-align: center;
+        left: 50%;
+        margin-left: 91px;
+      }
     }
   }
 }
