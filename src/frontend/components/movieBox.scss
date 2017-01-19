@@ -7,7 +7,16 @@ $space: 16px;
   position: relative;
   margin: $space 0px 0px $space;
   cursor: pointer;
+
+  .bg {
+    background: #000;
+    opacity: 0.4;
+    z-index: 10;
+  }
+
   span {
+    z-index: 20;
+    height: 36px;
     position: absolute;
     padding: 8px;
     color: white;

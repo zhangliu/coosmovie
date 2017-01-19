@@ -1,11 +1,20 @@
-.movie-list-container {
+.movie-list {
+  overflow: hidden;
   margin-top: 24px;
+  background-color: #fff;
+  padding: 16px 0px;
+  box-shadow: 0 0 8px 1px #e4e5e6;
+  border-bottom: 1px solid #e3e7e8;
 
-  .movie-list-div {
-    background-color: #fff;
-    overflow: hidden;
-    padding-bottom: 16px;
-    box-shadow: 0 0 8px 1px #e4e5e6;
-    border-bottom: 1px solid #e3e7e8;
+  .title {
+    font-size: 20px;
+    color: #555;
+    font-weight: bold;
+    padding-bottom: 2px;
+    margin: 0px 16px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .content {
   }
 }

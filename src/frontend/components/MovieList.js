@@ -10,13 +10,12 @@ export default class MovieList extends React.Component {
 
   render() {
     return (
-      <Row className='movie-list-container'>
-        <Col span={22} offset={1}>
-          <div className='movie-list-div'>
-            {this.props.children}
-          </div>
-        </Col>
-      </Row>
+      <div className='movie-list'>
+        <div className='title'>{this.props.title}</div>
+        <div className='content'>
+          {this.props.children}
+        </div>
+      </div>
     )
   }
 }

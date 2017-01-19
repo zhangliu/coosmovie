@@ -19,6 +19,7 @@ export default class MovieBox extends React.Component {
           src={this.state.movie.img_src}
           onMouseOver={this.onMouseOver.bind(this)}
           onMouseOut={this.onMouseOut.bind(this)}/>
+        <span className='bg'></span>
         <span>{this.state.movie.name}</span>
       </a>
     )

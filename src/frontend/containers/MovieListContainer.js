@@ -21,7 +21,7 @@ export default class IndexContainer extends React.Component {
 
   render() {
     return (
-      <MovieList>
+      <MovieList title='电影'>
         {
           this.state.movies.map((movie, index) => {
             return <MovieBox
