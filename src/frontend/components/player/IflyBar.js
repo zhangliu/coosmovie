@@ -43,7 +43,11 @@ export default class className extends React.Component {
 
   renderSentence() {
     const words = this.props.iflyInfo.result.replace(/\s+/g, ' ').split(' ')
-    return words.filter(w => !!w).map((w, i) => <Tag key={i}>{w}</Tag>)
+    const result =  words.filter(w => !!w).map((w, i) => <Tag key={i}>{w}</Tag>)
+    if (result.length <= 0) {
+      return <span className='tip'>请点击下方按钮后进行跟读，识别后的单词将会显示在该区域！</span>
+    }
+    return result
   }
 
   render() {

@@ -1,11 +1,13 @@
 .player {
   background: #fff;
+  margin: 24px 0px;
+  border: 1px solid #eee;
 
-  .content {
+  >.content {
     background: #333;
     display: flex;
     flex-direction: row;
-    .left-div {
+    >.left-div {
 
       .mask {
         background: #000;
@@ -16,7 +18,7 @@
 
       .bar {
         background: #f1f1f1;
-        border: 1px solid #ddd;
+        border: 1px solid #e1e1e1;
         border-top: 0px;
         padding: 12px;
         display: flex;
@@ -24,7 +26,7 @@
       }
     }
 
-    .right-div {
+    >.right-div {
       padding: 8px;
       color: #aaa;
 
@@ -36,7 +38,7 @@
           padding: 4px;
           background: #444;
           margin: 4px;
-          width: 32px;
+          width: 30px;
           color: #ccc;
           text-align: center;
           border: 1px solid #555;
@@ -65,15 +67,18 @@
   }
 
 
-  .iflyBar {
+  >.iflyBar {
     text-align: center;
-    margin: 16px auto;
-    padding: 16px 0px;
+    margin: 24px;
 
     .sentence {
-      text-align: center;
-      margin: 16px auto;
-      padding: 0px 16px;
+      margin: 16px;
+      padding: 8px 16px;
+      border: 1px dashed #ddd;
+
+      .tip {
+        color: #aaa;
+      }
     }
 
     .controllButton {
