@@ -7,7 +7,7 @@ export default class className extends React.Component {
   }
 
   renderBar() {
-    let tip = '点击开始录音'
+    let tip = '点击开始跟读'
     switch (this.props.iflyInfo.status) {
       case 'onStart':
         tip = '服务初始化...';
