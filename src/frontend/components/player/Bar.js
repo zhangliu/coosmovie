@@ -1,4 +1,5 @@
 import React from 'react'
+import {Slider, Switch} from 'antd'
 import positionHelper from '../../libs/positionHelper'
 
 export default class className extends React.Component {
@@ -31,7 +32,13 @@ export default class className extends React.Component {
     const currentMinutes = this.getMinuteFormat(this.state.currentSeconds)
     return (
       <div className='bar'>
-        <div>{currentMinutes} / {totalMinutes}</div>
+        <Slider value={30} />
+        <div className='bar-content'>
+          <div className='change-mode'>
+            <Switch checked checkedChildren={'听力模式'} unCheckedChildren={'写作模式'} />
+          </div>
+          {currentMinutes} / {totalMinutes}
+        </div>
       </div>
     )
   }

@@ -11,7 +11,6 @@ export default class className extends React.Component {
   constructor(props) {
     super(props)
     this.player = null
-    this.timer = null
     this.state = {
       src: '',
       segmentInfo: {
@@ -56,28 +55,23 @@ export default class className extends React.Component {
   }
 
   onPlay() {
-    this.player.volume = 1
-    clearInterval(this.timer)
-    if (this.player) {
-      this.timer = setInterval(() => {
-        const segments = this.state.segmentInfo.segments
-        const index = this.state.segmentInfo.index
-        const timeDiff = this.player.currentTime * 1000 - segments[index].endTime
-        if (segments[index] && (timeDiff > 0 && timeDiff < 100)) {
-          this.player.pause()
-        }
-        if (segments[index] && (this.player.currentTime * 1000 - segments[index].endTime) > 1000) {
-          this.player.currentTime = segments[index].startTime / 1000
-        }
-        this.state.mask.sentence = segments[index].sentence
-        this.state.currentSeconds = this.player.currentTime
-        this.setState(this.state)
-      }, 100)
+  }
+
+  onTimeUpdate() {
+    const segments = this.state.segmentInfo.segments
+    const index = this.state.segmentInfo.index
+    if (!segments[index]) {
+      return
     }
+    const timeDiff = this.player.currentTime * 1000 - segments[index].endTime
+    if (timeDiff > 0) {
+      this.player.pause()
+    }
+    this.setState({currentSeconds: this.player.currentTime})
   }
 
   onPause() {
-    clearInterval(this.timer)
+
   }
 
   onUpdateProgress(currentSeconds) {
@@ -89,18 +83,24 @@ export default class className extends React.Component {
       this.player.pause()
       return
     }
-    this.player.play()
+    this.onChangeSentence(0)
   }
 
   onRecognize(recognizeWords) {
     console.log('onRecognize........');
-    // this.state.segmentInfo.index++
-    // this.setState(this.state)
   }
 
   onChangeSentence(offset) {
+    const segments = this.state.segmentInfo.segments
     let index = this.state.segmentInfo.index + offset
-    this.state.segmentInfo.index = index > 0 ? index : 0
+    index = index > 0 ? index : 0
+    if (!segments[index]) {
+      return
+    }
+    this.state.segmentInfo.index = index
+    this.state.mask.sentence = segments[index].sentence
+    this.state.currentSeconds = segments[index].startTime / 1000
+    this.player.currentTime = this.state.currentSeconds
     return this.setState(this.state, () => {
       this.player.play()
     })
@@ -114,7 +114,7 @@ export default class className extends React.Component {
             <video
               className='video'
               ref={node => this.player = node}
-              onPlay={this.onPlay.bind(this)}
+              onTimeUpdate={this.onTimeUpdate.bind(this)}
               onPause={this.onPause.bind(this)}
               onClick={this.onClick.bind(this)}
               onCanPlay={this.onCanPlay.bind(this)}
