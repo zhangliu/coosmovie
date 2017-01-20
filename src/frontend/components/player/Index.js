@@ -92,9 +92,10 @@ export default class className extends React.Component {
     this.player.play()
   }
 
-  onRecognizeOk() {
-    this.state.segmentInfo.index++
-    this.setState(this.state)
+  onRecognize(recognizeWords) {
+    console.log('onRecognize........');
+    // this.state.segmentInfo.index++
+    // this.setState(this.state)
   }
 
   onChangeSentence(offset) {
@@ -118,10 +119,10 @@ export default class className extends React.Component {
               onClick={this.onClick.bind(this)}
               onCanPlay={this.onCanPlay.bind(this)}
               src={this.state.src}
-              autoPlay={true}/>
+              autoPlay={false}/>
             <Mask
               recognizeSentence={this.props.iflyInfo.result}
-              onRecognizeOk={this.onRecognizeOk.bind(this)}
+              onRecognize={this.onRecognize.bind(this)}
               sentence={this.state.mask.sentence}
               height={this.state.mask.height}/>
             <Bar
