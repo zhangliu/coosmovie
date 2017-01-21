@@ -35,11 +35,11 @@ export default class className extends React.Component {
           type='primary'>{tip}</Button>
         <div className='controll-div'>
           <Button.Group size='small'>
-            <Button onClick={this.props.onChangeSentence.bind(null, 0)}>
-              重播<Icon type="retweet" />
-            </Button>
             <Button onClick={this.props.onChangeSentence.bind(null, -1)}>
               <Icon type="left" />上一句
+            </Button>
+            <Button onClick={this.props.onChangeSentence.bind(null, 0)}>
+              重播<Icon type="retweet" />
             </Button>
             <Button onClick={this.props.onChangeSentence.bind(null, 1)}>
               下一句<Icon type="right" />

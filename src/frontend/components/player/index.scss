@@ -124,17 +124,12 @@
     }
 
     .controll-bar {
-      position: relative;
       .talk-button {
         width: 150px;
-        margin: 0px 16px;
+        margin: 8px 16px;
       }
       .controll-div {
-        position: absolute;
-        top: 10px;
-        text-align: center;
-        left: 50%;
-        margin-left: 91px;
+        margin-top: 8px;
       }
     }
   }
