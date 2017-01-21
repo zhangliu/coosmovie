@@ -42,7 +42,7 @@ export default class className extends React.Component {
           <div>
             <div className='scoreTitle'>您在本视频的得分</div>
             <div className='scoreInfo'>{this.getScore(this.props.scoreInfo)}</div>
-              <div className='scoreDes'>使用过多'//'或者重复播放视频过多，都会导致分数下降！</div>
+              <div className='scoreDes'>得分规则>></div>
           </div>
         </div>
       </div>
