@@ -30,12 +30,15 @@ export default class className extends React.Component {
   render() {
     const totalMinutes = this.getMinuteFormat(this.props.totalSeconds)
     const currentMinutes = this.getMinuteFormat(this.state.currentSeconds)
+    const process = this.props.totalSeconds
+      ? ((this.state.currentSeconds / this.props.totalSeconds) * 100)
+      : 0
     return (
       <div className='bar'>
-        <Slider value={30} />
+        <Slider value={process} />
         <div className='bar-content'>
           <div className='bar-controller'>
-            <Icon type='pause-circle' />
+            <Icon onClick={this.props.onViedoPlay} type='pause-circle' />
             <span>{currentMinutes} / {totalMinutes}</span>
           </div>
           <div className='change-mode'>

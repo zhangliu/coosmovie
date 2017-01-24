@@ -1,9 +1,9 @@
 import React from 'react'
-import {Row, Col} from 'antd'
 import Bar from './Bar'
 import Mask from './Mask'
 import RightNav from './RightNav'
 import IflyBar from './IflyBar'
+import Video from './Video'
 
 import './index.scss'
 
@@ -32,42 +32,37 @@ export default class className extends React.Component {
     if (this.state.segmentInfo.segments.length <= 0) {
       const segments = JSON.parse(props.movieSlice.segments);
       const index = props.playInfo && props.playInfo.segmentIndex ? props.playInfo.segmentIndex : 0
-      this.state.segmentInfo = {segments: segments, index: index}
-      stateInfo.segmentInfo = this.state.segmentInfo
+      stateInfo.segmentInfo = {segments: segments, index: index}
+      stateInfo.currentSeconds = segments[index].startTime / 1000
     }
 
     if (!this.state.src) {
-      this.state.src = props.movieSlice.src
-      stateInfo.src = this.state.src
+      stateInfo.src = props.movieSlice.src
     }
 
     if (Object.keys(stateInfo).length > 0) {
       this.setState(stateInfo, () => {
-        const info = this.state.segmentInfo
-        this.player.currentTime = info.segments[info.index].startTime / 1000
+        this.player.setCurrentTime(this.state.currentSeconds)
       })
+
     }
   }
 
   onCanPlay() {
-    this.state.totalSeconds = this.player.duration
-    this.setState(this.state)
-  }
-
-  onPlay() {
+    this.setState({totalSeconds: this.player.duration})
   }
 
   onTimeUpdate() {
-    const segments = this.state.segmentInfo.segments
-    const index = this.state.segmentInfo.index
-    if (!segments[index]) {
-      return
-    }
-    const timeDiff = this.player.currentTime * 1000 - segments[index].endTime
-    if (timeDiff > 0) {
-      this.player.pause()
-    }
-    this.setState({currentSeconds: this.player.currentTime})
+    this.setState({currentSeconds: this.player.currentTime}, () => {
+      const {segments, index} = this.state.segmentInfo
+      if (!segments[index]) {
+        return
+      }
+      const timeDiff = this.state.currentSeconds * 1000 - segments[index].endTime
+      if (timeDiff > 0) {
+        this.player.pause()
+      }
+    })
   }
 
   onPause() {
@@ -75,7 +70,7 @@ export default class className extends React.Component {
   }
 
   onUpdateProgress(currentSeconds) {
-    this.player.currentTime = currentSeconds
+    this.setState({currentSeconds})
   }
 
   onClick() {
@@ -100,8 +95,8 @@ export default class className extends React.Component {
     this.state.segmentInfo.index = index
     this.state.mask.sentence = segments[index].sentence
     this.state.currentSeconds = segments[index].startTime / 1000
-    this.player.currentTime = this.state.currentSeconds
     return this.setState(this.state, () => {
+      this.player.setCurrentTime(this.state.currentSeconds)
       this.player.play()
     })
   }
@@ -111,7 +106,7 @@ export default class className extends React.Component {
       <div className='player'>
         <div className='content'>
           <div className='left-div'>
-            <video
+            <Video
               className='video'
               ref={node => this.player = node}
               onTimeUpdate={this.onTimeUpdate.bind(this)}
@@ -119,6 +114,7 @@ export default class className extends React.Component {
               onClick={this.onClick.bind(this)}
               onCanPlay={this.onCanPlay.bind(this)}
               src={this.state.src}
+              currentTime={this.state.currentSeconds}
               autoPlay={false}/>
             <Mask
               recognizeSentence={this.props.iflyInfo.result}
@@ -128,6 +124,7 @@ export default class className extends React.Component {
             <Bar
               totalSeconds={this.state.totalSeconds}
               currentSeconds={this.state.currentSeconds}
+              onViedoPlay={this.onClick.bind(this)}
               onUpdateProgress={this.onUpdateProgress.bind(this)}/>
           </div>
           <div className='right-div'>
