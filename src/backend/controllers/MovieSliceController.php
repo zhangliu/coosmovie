@@ -30,6 +30,7 @@ class MovieSliceController extends Controller{
 
   public function actionGetallslices() {
     $movieSlices = MovieSlice::find()
+      ->select(['id', 'local_src', 'src', 'movie_id', 'order_id'])
       ->where(['movie_id' => \Yii::$app->request->get('movieId')])
       ->all();
     $result = array();
