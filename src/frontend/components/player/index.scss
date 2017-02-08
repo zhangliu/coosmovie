@@ -133,4 +133,31 @@
       }
     }
   }
+
+  >.input-bar {
+    margin: 56px;
+
+    .input-bar-down {
+      margin-top: 2px;
+      display: flex;
+      flex-direction: row;
+
+      .input-bar-left {
+        width: 90%;
+        textarea.ant-input {
+          border-radius: 6px 0px 0px 6px;
+        }
+      }
+
+      .input-bar-right {
+        width: 10%;
+
+        button {
+          width: 100%;
+          height: 46px;
+          border-radius: 0px 6px 6px 0px;
+        }
+      }
+    }
+  }
 }

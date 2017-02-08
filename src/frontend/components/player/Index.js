@@ -1,8 +1,10 @@
 import React from 'react'
 import Bar from './Bar'
-import Mask from './Mask'
+import ListenMask from './ListenMask'
+import WriteMask from './WriteMask'
 import RightNav from './RightNav'
 import IflyBar from './IflyBar'
+import InputBar from './InputBar'
 import Video from './Video'
 
 import './index.scss'
@@ -24,6 +26,7 @@ export default class className extends React.Component {
       },
       totalSeconds: 0,
       currentSeconds: 0,
+      isListenMode: false,
     }
   }
 
@@ -101,6 +104,44 @@ export default class className extends React.Component {
     })
   }
 
+  onModeChange(value) {
+    this.setState({isListenMode: value})
+  }
+
+  onInputBarChange(obj) {
+    switch (obj.command) {
+      case 'replay':
+        this.onChangeSentence(0)
+        break
+      case 'showSentence':
+        
+        break
+      default:
+        return
+    }
+  }
+
+  getPractiseBar() {
+    if (this.state.isListenMode) {
+      return <IflyBar
+              onTalking={this.props.onTalking}
+              onChangeSentence={this.onChangeSentence.bind(this)}
+              iflyInfo={this.props.iflyInfo}/>
+    }
+    return <InputBar onInputBarChange={this.onInputBarChange.bind(this)}/>
+  }
+
+  getMask() {
+    if (this.state.isListenMode) {
+      return <ListenMask
+              recognizeSentence={this.props.iflyInfo.result}
+              onRecognize={this.onRecognize.bind(this)}
+              sentence={this.state.mask.sentence}
+              height={this.state.mask.height}/>
+    }
+    return <WriteMask/>
+  }
+
   render() {
     return (
       <div className='player'>
@@ -116,15 +157,13 @@ export default class className extends React.Component {
               src={this.state.src}
               currentTime={this.state.currentSeconds}
               autoPlay={false}/>
-            <Mask
-              recognizeSentence={this.props.iflyInfo.result}
-              onRecognize={this.onRecognize.bind(this)}
-              sentence={this.state.mask.sentence}
-              height={this.state.mask.height}/>
+            {this.getMask()}
             <Bar
               totalSeconds={this.state.totalSeconds}
               currentSeconds={this.state.currentSeconds}
+              onModeChange={this.onModeChange.bind(this)}
               onViedoPlay={this.onClick.bind(this)}
+              isListenMode={this.state.isListenMode}
               onUpdateProgress={this.onUpdateProgress.bind(this)}/>
           </div>
           <div className='right-div'>
@@ -133,10 +172,7 @@ export default class className extends React.Component {
               movieSlices={this.props.movieSlices}/>
           </div>
         </div>
-        <IflyBar
-          onTalking={this.props.onTalking}
-          onChangeSentence={this.onChangeSentence.bind(this)}
-          iflyInfo={this.props.iflyInfo}/>
+        {this.getPractiseBar()}
       </div>
     )
   }

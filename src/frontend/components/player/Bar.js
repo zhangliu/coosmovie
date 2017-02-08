@@ -42,7 +42,11 @@ export default class className extends React.Component {
             <span>{currentMinutes} / {totalMinutes}</span>
           </div>
           <div className='change-mode'>
-            <Switch checked checkedChildren={'听力模式'} unCheckedChildren={'写作模式'} />
+            <Switch
+              onChange={this.props.onModeChange}
+              checked={this.props.isListenMode}
+              checkedChildren={'听力模式'}
+              unCheckedChildren={'写作模式'} />
           </div>
         </div>
       </div>
