@@ -47,7 +47,7 @@ export default class className extends React.Component {
     this.input.refs.input.focus()
   }
 
-  onChange(e) {
+  async onChange(e) {
     this.popover.hide()
     const lastTowChar = e.target.value.substr(-2).toLowerCase()
     const obj = {content: e.target.value, command: ''}
@@ -58,20 +58,20 @@ export default class className extends React.Component {
         const position = positionHelper.getCursorPosition(e.target)
         const arr = obj.content.replace(/\s*$/g, '').split(' ')
         const title = arr[arr.length - 1]
-        translateHelper.getTranslate(title)
-        .then(data => {
+
+        try {
+          const data = await translateHelper.getTranslate(title)
           console.log(data)
           const phonogram = data['phonogram']['en'] ? data['phonogram']['en']['text'] : title
           this.state.popover.title = `${title} [${phonogram}]`
           const content = data.brief.splice(0, 3).map(m => m.definition).join(';')
           this.state.popover.content = content
           this.setState(this.state)
-        })
-        .catch(() => {
+        } catch (e) {
           this.state.popover.title = '未找到该词条'
           this.state.popover.content = ''
           this.setState(this.state)
-        })
+        }
         this.popover.show(position)
         break
       case '/r':

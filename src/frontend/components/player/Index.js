@@ -6,6 +6,7 @@ import RightNav from './RightNav'
 import IflyBar from './IflyBar'
 import InputBar from './InputBar'
 import Video from './Video'
+import sentenceLogics from '../logics/sentence'
 
 import './index.scss'
 
@@ -114,10 +115,15 @@ export default class className extends React.Component {
         this.onChangeSentence(0)
         break
       case 'showSentence':
-        
+
         break
       default:
-        return
+
+    }
+    const showSentence = sentenceLogics.getCompleteStr(this.state.mask.sentence, obj.content)
+    if (showSentence.length > 0) {
+      this.state.mask.showSentence = showSentence
+      this.setState({mask: this.state.mask})
     }
   }
 
@@ -139,7 +145,9 @@ export default class className extends React.Component {
               sentence={this.state.mask.sentence}
               height={this.state.mask.height}/>
     }
-    return <WriteMask/>
+    return <WriteMask
+            showSentence={this.state.mask.showSentence}
+            height={this.state.mask.height}/>
   }
 
   render() {

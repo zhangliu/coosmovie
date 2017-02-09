@@ -9,11 +9,11 @@ export default class className extends React.Component {
   }
 
   componentWillReceiveProps(props) {
-    
+
   }
 
   renderSentence() {
-
+    return this.props.showSentence
   }
 
   render() {

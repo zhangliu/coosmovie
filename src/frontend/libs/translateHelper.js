@@ -1,7 +1,6 @@
-const getTranslate = word => {
-  return fetch(`http://www.beikaodi.com/api/word/spell/${word}`)
-    .then(res => res.json())
-    .then(json => json.data)
+const getTranslate = async word => {
+  const res = await fetch(`http://www.beikaodi.com/api/word/spell/${word}`)
+  return (await res.json()).data
 }
 
 export default {
